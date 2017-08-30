@@ -25,7 +25,7 @@ Efficiently generate cryptographically strong random strings of specified entrop
   end
 
   defp package do
-    [contributors: ["Paul Rogers"],
+    [maintainers: ["Paul Rogers"],
      licenses: ["MIT"],
      links: %{"github" => "https://github.com/EntropyString/Elixir" }]
   end    
