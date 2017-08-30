@@ -4,8 +4,6 @@ Efficiently generate cryptographically strong random strings of specified entrop
 
 [![Build Status](https://travis-ci.org/EntropyString/Elixir.svg?branch=master)](https://travis-ci.org/EntropyString/Elixir) &nbsp; [![Hex Version](https://img.shields.io/hexpm/v/entropy_string.svg "Hex Version")](https://hex.pm/packages/entropy_string) &nbsp; [![License: MIT](https://img.shields.io/npm/l/express.svg)]()
 
-https://github.com/EntropyString/EntropyString-Swift/blob/master/LICENSE
-
 ### <a name="TOC"></a>TOC
  - [Installation](#Installation)
  - [Usage](#Usage)
