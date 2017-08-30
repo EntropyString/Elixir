@@ -1,6 +1,11 @@
 language: elixir
 sudo: false
 
+elixir:
+  - 1.4.0
+otp_release:
+  - 19.3
+
 env:
   - ELIXIR_ASSERT_TIMEOUT=2000
   
