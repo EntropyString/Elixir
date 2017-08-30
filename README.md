@@ -17,14 +17,18 @@ Efficiently generate cryptographically strong random strings of specified entrop
 
 ### Installation
 
-#### Hex
-
-Install via [Hex](https://hex.pm/docs/publish) by adding `entropy_string` in `mix.exs`:
+Add `entropy_string` to `mix.exs` dependencies:
 
   ```elixir
   def deps do
-    [ {:entropy_string, "~> 0.1.0"} ]
+    [ {:entropy_string, "~> 1.0.0"} ]
   end
+  ```
+
+Update dependencies
+
+  ```bash
+  mix deps.get
   ```
 
 [TOC](#TOC)
