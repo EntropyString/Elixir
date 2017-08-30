@@ -331,12 +331,9 @@ defmodule EntropyString do
   end
 
   defp _random_string_bytes(bits, charset, bytes) do
-    # Require for travis CI
-    Code.ensure_loaded(:math)
-    
     bitsPerChar = CharSet.bits_per_char(charset)
     ndxFn = ndx_fn(charset)
-    charCount = trunc(:math.ceil(bits / bitsPerChar))
+    charCount = trunc(Float.ceil(bits / bitsPerChar))
     _random_string_count(charCount, ndxFn, charset, bytes, <<>>)
   end
 

@@ -181,12 +181,9 @@ defmodule EntropyString.CharSet do
   """
   def bytes_needed(bits, _charset) when bits < 0, do: {:error, "Negative entropy"}
   def bytes_needed(bits, charset) do
-    # Require for travis CI
-    Code.ensure_loaded(:math)
-    
     bitsPerChar = bits_per_char(charset)
-    charCount = round(:math.ceil(bits/bitsPerChar))
-    round(:math.ceil(charCount * bitsPerChar / @bitsPerByte))
+    charCount = round(Float.ceil(bits/bitsPerChar))
+    round(Float.ceil(charCount * bitsPerChar / @bitsPerByte))
   end
 
   ##================================================================================================

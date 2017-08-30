@@ -27,7 +27,7 @@ defmodule CharSetTest do
     Enum.each(:lists.seq(0,17), fn(bits) ->
       Enum.each(@charsets, fn(charset) ->
         bytesNeeded = CharSet.bytes_needed(bits, charset)
-        atLeast = :math.ceil(bits / @bits_per_byte)
+        atLeast = Float.ceil(bits / @bits_per_byte)
         assert atLeast <= bytesNeeded
         assert bytesNeeded <= atLeast + 1
       end)
