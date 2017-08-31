@@ -35,98 +35,115 @@ Update dependencies
 
 ### <a name="Usage"></a>Usage
 
+To run code snippets in the Elixir shell
+
+  ```bash
+  > mix compile
+  > iex -pa _build/default/lib/entropy_string/ebin
+  Erlang/OTP ...
+  iex(1)>
+  ```
+
 OWASP session ID using predefined base 32 characters:
 
   ```elixir
-  iex> import EntropyString.CharSet, only: [charset32: 0]
-  iex> EntropyString.session_id(charset32)
+  iex(1)> import EntropyString.CharSet, only: [charset32: 0]
+  EntropyString.CharSet
+  iex(2)> EntropyString.session_id(charset32)
+  "rp7D4hGp2QNPT2FP9q3rG8tt29"
   ```
-
-  > "rp7D4hGp2QNPT2FP9q3rG8tt29"
 
 Session ID using [RFC 4648](https://tools.ietf.org/html/rfc4648#section-5) file system and URL safe characters:
 
   ```elixir
-  iex> import EntropyString.CharSet, only: [charset64: 0]
-  iex> EntropyString.session_id(charset64)
+  iex(1)> import EntropyString.CharSet, only: [charset64: 0]
+  EntropyString.CharSet
+  iex(2)> EntropyString.session_id(charset64)
+  "wpi3-HElCowpZbIjdNNjpz"
   ```
-
-  > "wpi3-HElCowpZbIjdNNjpz"
 
 Generate a potential of _1 million_ random strings with _1 in a billion_ chance of repeat:
 
   ```elixir
-  iex> import EntropyString
-  iex> entropy_bits(ten_p(6), ten_p(9)) |> random_string
+  iex(1)> import EntropyString
+  EntropyString
+  iex(2)> entropy_bits(ten_p(6), ten_p(9)) |> random_string
+  "GhrB6fJbD6gTpT"
   ```
 
-  > "GhrB6fJbD6gTpT"
-
-**_EntropyString_** uses predefined `charset32` characters by default (reference [Character Sets](#CharacterSets)). To get a random hexadecimal string with the same entropy `bits` as above (i.e., same total number of potential strings with the specified risk):
+**_EntropyString_** uses predefined `charset32` characters by default (reference [Character Sets](#CharacterSets)). To get a random hexadecimal string with the same entropy `bits` as above (see [Real Need](#RealNeed) for description of what entropy `Bits` represents):
 
   ```elixir
-  iex> import EntropyString
-  iex> import EntropyString.CharSet, only: [charset16: 0]
-  iex> entropy_bits(ten_p(6), ten_p(9)) |> random_string(charset16)
+  iex(1)> import EntropyString
+  EntropyString
+  iex(2)> import EntropyString.CharSet, only: [charset16: 0]
+  EntropyString.CharSet
+  iex(3)> entropy_bits(ten_p(6), ten_p(9)) |> random_string(charset16)
+  "acc071449951325cc5"
   ```
-
-  > "acc071449951325cc5"
 
 Custom characters may be specified. Using uppercase hexadecimal characters:
 
   ```elixir
-  iex> import EntropyString
-  iex> import EntropyString.CharSet, only: [charset16: 0]
-  iex> entropy_bits(ten_p(6), ten_p(9)) |> random_string(String.upcase(charset16))
+  iex(1)> import EntropyString
+  EntropyString
+  iex(2)> import EntropyString.CharSet, only: [charset16: 0]
+  EntropyString.CharSet
+  iex(3)> entropy_bits(ten_p(6), ten_p(9)) |> random_string(String.upcase(charset16))
+  "E75C7A50972E4994ED"
   ```
-
-  > "E75C7A50972E4994ED"
 
 #### Module `use`
 
 The macro `use EntropyString` adds the following functions to a module: `small_id/1`, `medium_id/1`, `large_id/1`, `session_id/1`, `token/1`, `random_string/2`,  and `charset/0`. Without any options, the predefined `CharSet.charset32` is automatically used by all these functions except `token/2`, which uses `CharSet.charset64` by default.
 
   ```elixir
-  iex> defmodule Id, do: use EntropyString
-  iex> Id.session_id
+  iex(1)> defmodule Id, do: use EntropyString
+  {:module, Id,
+     ...
+  iex(2)> Id.session_id
+  "69fB27R2TLNNr3bQNFbjTp399Q"
   ```
-
-  > "69fB27R2TLNNr3bQNFbjTp399Q"
 
 Generate a total of 30 potential strings with a 1 in a million chance of a repeat:
 
   ```elixir
-  iex> Id.small_id
+  iex(1)> defmodule Id, do: use EntropyString
+  {:module, Id,
+     ...
+  iex(2)> Id.small_id
+  "6jQTmD"
   ```
-
-  > "6jQTmD"
 
 The default **_CharSet_** for a module can be specified by passing the `charset` option to the `use` macro:
 
   ```elixir
-  iex> defmodule HexId, do: use EntropyString, charset: EntropyString.CharSet.charset16
+  iex(1)> defmodule HexId, do: use EntropyString, charset: EntropyString.CharSet.charset16
+  {:module, HexId,
+     ...
   iex> HexId.session_id
+  "f54a61dd3018cbdb1c495a15b5e7f383"
   ```
-
-  > "f54a61dd3018cbdb1c495a15b5e7f383"
 
 Passing a `String` as the `charset` option specifies custom characters to use in the module:
 
   ```elixir
-  iex> defmodule DingoSky, do: use EntropyString, charset: "dingosky"
-  iex> DingoSky.medium_id
+  iex(1)> defmodule DingoSky, do: use EntropyString, charset: "dingosky"
+  {:module, DingoSky,
+     ...
+  iex(2)> DingoSky.medium_id
+  "dgoiokdooyykyisyyyoioks"
   ```
 
-  > "dgoiokdooyykyisyyyoioks"
-
-The funtion `charset` reveals the characters in use by the module:
+The function `charset` reveals the characters in use by the module:
 
   ```elixir
-  iex> defmodule Id, do: use EntropyString
-  iex> Id.charset
+  iex(2)> defmodule Id, do: use EntropyString
+  {:module, Id,
+     ...
+  iex(3)> Id.charset
+  "2346789bdfghjmnpqrtBDFGHJLMNPQRT"
   ```
-
-  > "2346789bdfghjmnpqrtBDFGHJLMNPQRT"
 
 #### Examples
 
@@ -136,7 +153,7 @@ To run the examples in the `examples.exs` file, first compile `EntropyString`
   > mix compile
   ```
 
-and then launch the Elixir shell from the project base directory using the following command. The customization in `iex.exs` automatically loads `EntropyString` and runs the file `examples.exs`.
+and then launch the Elixir shell from the project base directory using the command below. The customization in `iex.exs` automatically loads `EntropyString` and runs the file `examples.exs`.
 
 
   ```bash
@@ -172,11 +189,16 @@ and then launch the Elixir shell from the project base directory using the follo
     MyServer Token: RtJosJEgOmA0oy8wPyUGju6SeJhCDJslTPUlVbRJgRM
   ```
 
+Further commands can use the loaded modules:
+
   ```elixir
+  ES-iex> HexId.medium_id
+  "e092b3e3e13704681f"
+  ES-iex> DingoSky.id
+  "sngksyygyydgsknsdidysnd"
   ES-iex> MyServer.token
+  "mT2vN607xeJy8qzVElnFbCpCyYpuWrYRRKbtTsNI6RN"
   ```
-  
-  > "mT2vN607xeJy8qzVElnFbCpCyYpuWrYRRKbtTsNI6RN"
 
 [TOC](#TOC)
 
@@ -239,14 +261,15 @@ How do you address this need using a library designed to generate strings of spe
 Let's use `EntropyString` to help this developer by generating 5 IDs:
 
   ```elixir
-  iex> import EntropyString
-  iex> import EntropyString.CharSet, only: [charset16: 0]
-  iex> bits = entropy_bits(10000, 1000000)
-  iex> strings = for x <- :lists.seq(1,5), do: random_string(bits, charset16)
-  iex> IO.inspect strings
+  iex(1)> import EntropyString
+  EntropyString
+  iex(2)> import EntropyString.CharSet, only: [charset16: 0]
+  EntropyString.CharSet
+  iex(3)> bits = entropy_bits(10000, 1000000)
+  45.50699332842307
+  iex(4)> for x <- :lists.seq(1,5), do: random_string(bits, charset16)
+  ["85e442fa0e83", "a74dc126af1e", "368cd13b1f6e", "81bf94e1278d", "fe7dec099ac9"]
   ```
-
-  > Strings: ["85e442fa0e83", "a74dc126af1e", "368cd13b1f6e", "81bf94e1278d", "fe7dec099ac9"]
 
 To generate the IDs, we first use
 
@@ -254,7 +277,7 @@ To generate the IDs, we first use
   bits = entropy_bits(10000, 1000000)
   ```
 
-to determine how much entropy is needed to generate a potential of _10000 strings_ while satisfy the probabilistic uniqueness of a _1 in a million risk_ of repeat.. We didn't print the result, but if you did you'd see it's about **45.51** bits. Then inside the list comprehension we used
+to determine how much entropy is needed to generate a potential of _10000 strings_ while satisfy the probabilistic uniqueness of a _1 in a million risk_ of repeat. We can see from the output of the Elixir shell it's about **45.51** bits. Inside the list comprehension we used
 
   ```elixir
   random_string(bits, charset16)
@@ -297,39 +320,58 @@ You may, of course, want to choose the characters used, which is covered next in
 Being able to easily generate random strings is great, but what if you want to specify your own characters? For example, suppose you want to visualize flipping a coin to produce 10 bits of entropy.
 
   ```elixir
-  iex> defmodule Coin do
+  iex(1)> defmodule Coin do
   ...>   use EntropyString, charset: EntropyString.CharSet.charset2
   ...>   def flip(flips), do: Coin.random_string(flips)
   ...> end
-  
-  iex> flips = Coin.flip(10)
-  iex> IO.puts "Flips: #{flips}"
-  ```
+  {:module, Coin,
+     ...
 
-  > flips: 0100101011
+  iex(2)> Coin.flip(10)
+  "0100101011"
+  ```
 
 The resulting string of __0__'s and __1__'s doesn't look quite right. Perhaps you want to use the characters __H__ and __T__ instead.
 
   ```elixir
-  iex> defmodule Coin do
+  iex(1)> defmodule Coin do
   ...>   use EntropyString, charset: "HT"
   ...>   def flip(flips), do: Coin.random_string(flips)
   ...> end
-  
-  iex> flips = Coin.flip(10)
-  iex> IO.puts "Flips: #{flips}"
-  ```
+  {:module, Coin,
+     ...
 
-  > flips: HTTTHHTTHH
+  iex(2)> Coin.flip(10)
+  "HTTTHHTTHH"
+  ```
 
 As another example, we saw in [Character Sets](#CharacterSets) the predefined characters for `charSet16` are **0123456789abcdef**. Suppose you like uppercase hexadecimal letters instead.
 
   ```elixir
-  iex> defmodule HexString, do: use EntropyString, charset: "0123456789ABCDEF"
-  iex> HexString.random_string(48)
+  iex(1)> defmodule HexString, do: use EntropyString, charset: "0123456789ABCDEF"
+  {:module, HexString,
+     ...
+  iex(2)> HexString.random_string(48)
+  "46E9DEA024F8"
   ```
 
-  > 3BD881733687
+To facilitate [efficient](#Efficiency) generation of strings, `EntropyString` limits character set lengths to powers of 2. Attempting to use a character set of an invalid length returns an error.
+
+  ```elixir
+  iex(1)> import EntropyString
+  EntropyString
+  iex(2)> EntropyString.random_string(48, "123456789ABCDEF")
+  {:error, "Invalid char count: must be one of 2,4,8,16,32,64"}
+  ```
+
+Likewise, since calculating entropy requires specification of the probability of each symbol, `EntropyString` requires all characters in a set be unique. (This maximize entropy per string as well).
+
+  ```elixir
+  iex(1)> import EntropyString
+  EntropyString
+  iex(2)> EntropyString.random_string(48, "123456789ABCDEF1")
+  {:error, "Chars not unique"}
+  ```
 
 [TOC](#TOC)
 
@@ -342,7 +384,7 @@ To generate the indices, `EntropyString` slices just enough bits from the random
 The `EntropyString` scheme is also efficient with regard to the amount of randomness used. Consider the following possible Elixir solution to generating random strings. To generated a character, an index into the available characters is created using `Enum.random`. The code looks something like:
 
   ```elixir
-  iex> defmodule MyString do
+  iex(1)> defmodule MyString do
   ...>   @chars "abcdefghijklmnopqrstuvwxyz0123456"
   ...>   @max String.length(@chars)-1
   ...>
@@ -356,67 +398,76 @@ The `EntropyString` scheme is also efficient with regard to the amount of random
   ...>     List.foldl(list, "", fn(e,acc) -> acc <> e end)
   ...>   end
   ...> end
-  
-  iex> MyString.random_string 16
+  {:module, MyString,
+     ...
+  iex(2)> MyString.random_string 16
+  "j0jaxxnoipdgksxi"
   ```
-  
-  > "j0jaxxnoipdgksxi"
 
-In the code above, `Enum.random` generates a value used to index into the hexadecimal character set. The Elixir docs for `Enum.random` indicate it uses the Erlang `rand` module, which in turn indicates that each random value has 58 bits of precision. Suppose we're creating strings with **len=16**. Then each string character consumes 58 bits of randomness while only injecting 5 bits (`log2(32)`) of entropy into the resulting random string. The resulting string has an information carrying capacity of 16 * 5 = 80 bits, so creating each string requires a *total* of 928 bits of randomness while only actually *carrying* 80 bits of that entropy forward in the string itself. That means 848 bits (91%) of the generated randomness is simply wasted.
+In the code above, `Enum.random` generates a value used to index into the hexadecimal character set. The Elixir docs for `Enum.random` indicate it uses the Erlang `rand` module, which in turn indicates that each random value has 58 bits of precision. Suppose we're creating strings with **len = 16**. Generating each string character consumes 58 bits of randomness while only injecting 5 bits (`log2(32)`) of entropy into the resulting random string. The resulting string has an information carrying capacity of 16 * 5 = 80 bits, so creating each string requires a *total* of 928 bits of randomness while only actually *carrying* 80 bits of that entropy forward in the string itself. That means 848 bits (91%) of the generated randomness is simply wasted.
 
-Compare that to the `EntropyString` scheme. For the example above, plucking 5 bits at a time requires a total of 80 bits (10 bytes). Creating the same strings as above, `EntropyString` uses 80 bits of randomness per string with no wasted bits. In general, the `EntropyString` scheme can waste up to 7 bits per string, but that's the worst case scenario and that's *per string*, not *per character*!
+Compare that to the `EntropyString` scheme. For the example above, plucking 5 bits at a time requires a total of 80 bits (10 bytes) be available. Creating the same strings as above, `EntropyString` uses 80 bits of randomness per string with no wasted bits. In general, the `EntropyString` scheme can waste up to 7 bits per string, but that's the worst case scenario and that's *per string*, not *per character*!
 
-There is, however, a potentially bigger issue at play in the above code. Erlang `rand`, and therefor Elixir `Enum.random`, is not a cryptographically strong psuedo random number generator. So the above code should not be used for session IDs or any other purpose that requires secure properties.
+There is, however, a potentially bigger issue at play in the above code. Erlang `rand`, and therefor Elixir `Enum.random`, does not use a cryptographically strong psuedo random number generator. So the above code should not be used for session IDs or any other purpose that requires secure properties.
 
 There are certainly other popular ways to create random strings, including secure ones. For example, generating secure random hex strings can be done by
 
   ```elixir
-  Base.encode16(:crypto.strong_rand_bytes(8))
+  iex(1)> Base.encode16(:crypto.strong_rand_bytes(8))
+  "389B363BB7FD6227"
   ```
-
-  > "389B363BB7FD6227"
 
 Or, to generate file system and URL safe strings
 
   ```elixir
-  Base.url_encode64(:crypto.strong_rand_bytes(8))
+  iex(1)> Base.url_encode64(:crypto.strong_rand_bytes(8))
+  "5PLujtDieyA="
   ```
-  
-  > "5PLujtDieyA="
 
-You would, of course, want to strip any padding characters.
+Since Base64 encoding is concerned with decoding as well, you would have to strip any padding characters. That's the price of a function for something it wasn't designed for.
 
-These two solution, however, each have the same limitations. You can't alter the characters, but more importantly, each is focused on a wrong aspect of specification, i.e., specifying string length as opposed to specifying the entropy bits sufficient to represent some total number of strings with an explicit declaration of an associated risk of repeat. As discussed in [Real Need](#RealNeed), string length is a by-product, not a goal.
+These two solutions each have the limitations. You can't alter the characters, but more importantly, each lacks a clear specification of how random the resulting strings actually are. Each specifies byte length as opposed to specifying the entropy bits sufficient to represent some total number of strings with an explicit declaration of an associated risk of repeat using whatever encoding characters you want.
 
-Fortunately you don't need to really understand how secure random bytes are efficiently sliced and diced to generate **_EntropyString_** random strings. But you may want to provide your own [Custom Bytes](#CustomBytes), which is the next topic.
+Fortunately you don't need to really understand how secure random bytes are efficiently sliced and diced to use `EntropyString`. But you may want to provide your own [Custom Bytes](#CustomBytes), which is the next topic.
 
 [TOC](#TOC)
 
 ### <a name="CustomBytes"></a>Custom Bytes
 
-As previously described, `EntropyString` automatically generates cryptographically strong random bytes to generate strings.  You may, however, have a need to provide your own bytes, for deterministic testing or perhaps to use a specialized random byte generator.
+As previously described, `EntropyString` automatically generates cryptographically strong random bytes to generate strings. You may, however, have a need to provide your own bytes, for deterministic testing or perhaps to use a specialized random byte generator.
 
-Suppose we want a string capable of 30 bits of entropy using 32 characters. We can specify the 4 bytes to use by:
+Suppose we want a string capable of 30 bits of entropy using 32 characters. We can specify the bytes to use during string generation by
 
   ```elixir
-  iex> import EntropyString.CharSet, only: [charset32: 0]
-  iex> bytes = <<0xfa, 0xc8, 0x96, 0x64>>
-  iex> EntropyString.random_string(30, charset32, bytes )
+  iex(1)> import EntropyString.CharSet, only: [charset32: 0]
+  EntropyString.CharSet
+  iex(2)> bytes = <<0xfa, 0xc8, 0x96, 0x64>>
+  <<250, 200, 150, 100>>
+  iex(3)> EntropyString.random_string(30, charset32, bytes )
+  "Th7fjL"
   ```
 
-  > "Th7fjL"
- 
 The __bytes__ provided can come from any source. However, an error is returned if the number of bytes is insufficient to generate the string as described in the [Efficiency](#Efficiency) section:
 
   ```elixir
-  iex> import EntropyString.CharSet, only: [charset32: 0]
-  iex> bytes = <<0xfa, 0xc8, 0x96, 0x64>>
-  iex> EntropyString.random_string(32, charset32, bytes )
+  iex(1)> import EntropyString.CharSet, only: [charset32: 0]
+  EntropyString.CharSet
+  iex(2)> bytes = <<0xfa, 0xc8, 0x96, 0x64>>
+  <<250, 200, 150, 100>>
+  iex(3)> EntropyString.random_string(32, charset32, bytes )
+  {:error, "Insufficient bytes: need 5 and got 4"}
   ```
 
-  > {:error, "Insufficient bytes: need 5 and got 4"}
+Note the number of bytes needed is dependent on the number of characters in the character set. For a string representation of entropy, we can only have multiples of the entropy bits per character. In the example above, each character represents 5 bits of entropy. So we can't get exactly 32 bits and we round up by the bits per character to a total 35 bits. We need 5 bytes (40 bits), not 4 (32 bits).
 
-Note the number of bytes needed is dependent on the number of characters in the **_CharSet_**. For a string representation of entropy, we can only have multiples of the bits of entropy per character used. So in the example above, to get at least 32 bits of entropy using a character set of 32 characters (5 bits per char), we'll need enough bytes to cover 35 bits, not 32, and an appropriate error is returned.
+`EntropyString.bytes_needed/2` can be used to determine the number of bytes needed to cover a specified amount of entropy for a given character set.
+
+  ```elixir
+  iex(1)> import EntropyString.CharSet, only: [bytes_needed: 2, charset32: 0]
+  EntropyString.CharSet
+  iex(2)> bytes_needed(32, charset32())
+  5
+  ```
 
 [TOC](#TOC)
 
@@ -432,21 +483,19 @@ Note the number of bytes needed is dependent on the number of characters in the 
   - You need to a total of **_N_** strings with a risk **_1/n_** of repeat.
     - The characters are arbitrary.
   - You need `EntropyString`.
-  
-##### One million IDs with a 1 in a billion chance of a repeat:
+
+##### A million potential IDs with a 1 in a billion chance of a repeat:
 
   ```elixir
-  iex> defmodule Id do
+  iex(1)> defmodule Id do
   ...>   use EntropyString
-  ...>
   ...>   @bits entropy_bits(ten_p(6), ten_p(9))
-  ...>
   ...>   def random, do: Id.random_string(@bits)
   ...> end
-  
-  iex> Id.random
+  {:module, Id,
+     ...
+  iex(2)> Id.random
+  "MP6qn86dHbBjD4"
   ```
-  
-  > "MP6qn86dHbBjD4"
-  
+
 [TOC](#TOC)

@@ -56,7 +56,7 @@ defmodule EntropyString do
               {_, reason} -> raise reason
             end
         end
-      
+
       @entropy_string_charset charset
 
       @before_compile EntropyString
@@ -156,8 +156,8 @@ defmodule EntropyString do
   ##
   ##================================================================================================
   @doc """
-  Random string using **_charset_** characters with a 1 in a billion chance of repeat for a
-  potential of a million strings.
+  Random string using **_charset_** characters with a 1 in a billion chance of repeat for a million
+  potential strings.
 
   ## Example
 
@@ -176,8 +176,8 @@ defmodule EntropyString do
   ##
   ##================================================================================================
   @doc """
-  Random string using **_charset_** characters with a 1 in a trillion chance of repeat for a
-  potential of a billion strings.
+  Random string using **_charset_** characters with a 1 in a trillion chance of repeat for a billion
+  potential strings.
 
   Default **_CharSet_** is `CharSet.charset32`.
 
@@ -217,7 +217,7 @@ defmodule EntropyString do
   ##
   ##================================================================================================
   @doc """
-  Random string using **_charset_** characters with 256 entropy bits. 
+  Random string using **_charset_** characters with 256 bits of entropy.
 
   Default **_CharSet_** is the base 64 URL and file system safe character set.
 
