@@ -136,25 +136,41 @@ To run the examples in the `examples.exs` file, first compile `EntropyString`
   > mix compile
   ```
 
-and then launch the Elixir shell from the project base directory
+and then launch the Elixir shell from the project base directory using the following command. The customization in `iex.exs` automatically loads `EntropyString` and runs the file `examples.exs`.
+
 
   ```bash
-  > iex
-  ```
+  > iex --dot-iex iex.exs
+  Erlang/OTP ...
+  EntropyString Loaded
 
-The customizations in `.iex.exs` automatically load `EntropyString` and run `examples.exs`.
+  Results of executing examples.exs file
+  --------------------------------------
 
-  ```elixir
-  ES-iex> HexId.medium_id
-  ```
-  
-  > "e092b3e3e13704681f"
+  Id: Predefined base 32 CharSet
+    Characters: 2346789bdfghjmnpqrtBDFGHJLMNPQRT
+    Session ID: L42P32Ldj6L8JdTTdt2HtHnp68
 
-  ```elixir
-  ES-iex> DingoSky.id
+  Base64Id: Predefined URL and file system safe CharSet
+    Characters: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_
+    Session ID: T9QCb6JqJKT4tTpIxXQjZQ
+
+  HexId: Predefined hex CharSet
+    Characters: 0123456789abcdef
+    Small ID: 377831e9
+
+  UpperHexId: Uppercase hex CharSet
+    Characters: 0123456789ABCDEF
+    Medium ID: EDC4C43949CC6D1D38
+
+  DingoSky: Custom CharSet for a million IDs with a 1 in a billion chance of repeat
+    Characters: dingosky
+    DingoSky ID: yyynonysygngkysgydddgyn
+
+  MyServer: 256 entropy bit token
+    Characters: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_
+    MyServer Token: RtJosJEgOmA0oy8wPyUGju6SeJhCDJslTPUlVbRJgRM
   ```
-  
-  > "sngksyygyydgsknsdidysnd"
 
   ```elixir
   ES-iex> MyServer.token
