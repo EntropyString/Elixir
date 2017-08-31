@@ -137,16 +137,13 @@ defmodule EntropyString do
   Random string using **_charset_** characters with a 1 in a million chance of repeat for a
   potential of 30 strings.
 
-  Default **_CharSet_** is `CharSet.charset32`.
+  Default **_CharSet_** is `charset32`.
 
   ## Example
-
-      charSet = EntropyString.CharSet.charset32
-      small_id = EntropyString.small_id(charSet)
-
+      EntropyString.small_id
       "nGrqnt"
   """
-  def small_id(charset) do
+  def small_id(charset \\ CharSet.charset32) do
     random_string(29, charset)
   end
 
@@ -159,14 +156,13 @@ defmodule EntropyString do
   Random string using **_charset_** characters with a 1 in a billion chance of repeat for a million
   potential strings.
 
+  Default **_CharSet_** is `charset32`.
+
   ## Example
-
-      charSet = EntropyString.CharSet.charset32
-      medium_id = EntropyString.small_id(charSet)
-
+      EntropyString.medium_id(charSet)
       "nndQjL7FLR9pDd"
   """
-  def medium_id(charset) do
+  def medium_id(charset \\ CharSet.charset32) do
     random_string(69, charset)
   end
 
@@ -179,16 +175,14 @@ defmodule EntropyString do
   Random string using **_charset_** characters with a 1 in a trillion chance of repeat for a billion
   potential strings.
 
-  Default **_CharSet_** is `CharSet.charset32`.
+  Default **_CharSet_** is `charset32`.
 
   ## Example
 
-      charSet = EntropyString.CharSet.charset32
-      large_id = EntropyString.small_id(charSet)
-
+      EntropyString.large_id(charSet)
       "NqJLbG8htr4t64TQmRDB"
   """
-  def large_id(charset) do
+  def large_id(charset \\ CharSet.charset32) do
     random_string(99, charset)
   end
 
@@ -200,14 +194,14 @@ defmodule EntropyString do
   @doc """
   Random string using **_charset_** characters suitable for 128-bit OWASP Session ID
 
+  Default **_CharSet_** is `charset32`.
+
   ## Example
 
-      charSet = EntropyString.CharSet.charset32
-      session_id = EntropyString.session_id(charSet)
-
+      EntropyString.session_id(charSet)
       "6pLfLgfL8MgTn7tQDN8tqPFR4b"
   """
-  def session_id(charset) do
+  def session_id(charset \\ CharSet.charset32) do
     random_string(128, charset)
   end
 
@@ -223,9 +217,8 @@ defmodule EntropyString do
 
   ## Example
 
-      token = EntropyString.token
-
-      "6pLfLgfL8MgTn7tQDN8tqPFR4b"
+      EntropyString.token
+      "zHZ278Pv_GaOsmRYdBIR5uO8Tt0OWSESZbVuQye6grt"
   """
   def token(charset \\ CharSet.charset64) do
     random_string(256, charset)
@@ -251,7 +244,7 @@ defmodule EntropyString do
   for **_charset_**, the returned entropy is the minimum that equals or exceeds the specified
   **_bits_**.
 
-  Default **_CharSet_** is `CharSet.charset32`.
+  Default **_CharSet_** is `charset32`.
 
   ## Example
 

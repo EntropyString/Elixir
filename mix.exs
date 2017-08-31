@@ -3,7 +3,7 @@ defmodule EntropyString.Mixfile do
 
   def project do
     [ app: :entropy_string,
-      version: "1.0.0",
+      version: "1.0.1",
       elixir: "~> 1.4",
       deps: deps(),
 
