@@ -5,7 +5,7 @@ defmodule EntropyStringTest do
 
   alias EntropyString.CharSet, as: CharSet
 
-  import EntropyString, only: [random_string: 2, random_string: 3, session_id: 1]
+  import EntropyString
 
   test "CharSet 64" do
     charset = CharSet.charset64
@@ -90,13 +90,59 @@ defmodule EntropyStringTest do
     assert random_string(16, charset, <<0xe3, 0xe9>>) == "1110001111101001"
   end
 
+  test "small ID" do
+    assert byte_size(small_id()) == 6
+    
+    assert byte_size(small_id(CharSet.charset64)) ==  5
+    assert byte_size(small_id(CharSet.charset32)) ==  6
+    assert byte_size(small_id(CharSet.charset16)) ==  8
+    assert byte_size(small_id(CharSet.charset8))  == 10
+    assert byte_size(small_id(CharSet.charset4))  == 15
+    assert byte_size(small_id(CharSet.charset2))  == 29
+  end  
+
+  test "medium ID" do
+    assert  byte_size(medium_id()) == 14
+    
+    assert  byte_size(medium_id(CharSet.charset64)) == 12
+    assert  byte_size(medium_id(CharSet.charset32)) == 14
+    assert  byte_size(medium_id(CharSet.charset16)) == 18
+    assert  byte_size(medium_id(CharSet.charset8))  == 23
+    assert  byte_size(medium_id(CharSet.charset4))  == 35
+    assert  byte_size(medium_id(CharSet.charset2))  == 69
+  end
+
+  test "large ID" do
+    assert  byte_size(large_id()) == 20
+    
+    assert  byte_size(large_id(CharSet.charset64)) == 17
+    assert  byte_size(large_id(CharSet.charset32)) == 20
+    assert  byte_size(large_id(CharSet.charset16)) == 25
+    assert  byte_size(large_id(CharSet.charset8))  == 33
+    assert  byte_size(large_id(CharSet.charset4))  == 50
+    assert  byte_size(large_id(CharSet.charset2))  == 99
+  end
+  
   test "session ID" do
+    assert byte_size(session_id()) ==  26
+
     assert byte_size(session_id(CharSet.charset64)) ==  22
     assert byte_size(session_id(CharSet.charset32)) ==  26
     assert byte_size(session_id(CharSet.charset16)) ==  32
-    assert byte_size(session_id(CharSet.charset8)) ==   43
-    assert byte_size(session_id(CharSet.charset4)) ==   64
-    assert byte_size(session_id(CharSet.charset2)) ==  128
+    assert byte_size(session_id(CharSet.charset8))  ==  43
+    assert byte_size(session_id(CharSet.charset4))  ==  64
+    assert byte_size(session_id(CharSet.charset2))  == 128
+  end
+
+  test "token" do
+    assert byte_size(token()) == 43
+
+    assert byte_size(token(CharSet.charset64)) ==  43
+    assert byte_size(token(CharSet.charset32)) ==  52
+    assert byte_size(token(CharSet.charset16)) ==  64
+    assert byte_size(token(CharSet.charset8))  ==  86
+    assert byte_size(token(CharSet.charset4))  == 128
+    assert byte_size(token(CharSet.charset2))  == 256
   end
 
   test "invalid byte count" do

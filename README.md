@@ -53,7 +53,7 @@ OWASP session ID using predefined base 32 characters:
   "rp7D4hGp2QNPT2FP9q3rG8tt29"
   ```
 
-Session ID using [RFC 4648](https://tools.ietf.org/html/rfc4648#section-5) file system and URL safe characters:
+OWASP session ID using [RFC 4648](https://tools.ietf.org/html/rfc4648#section-5) file system and URL safe characters:
 
   ```elixir
   iex(1)> import EntropyString.CharSet, only: [charset64: 0]
@@ -71,7 +71,7 @@ Generate a potential of _1 million_ random strings with _1 in a billion_ chance 
   "GhrB6fJbD6gTpT"
   ```
 
-**_EntropyString_** uses predefined `charset32` characters by default (reference [Character Sets](#CharacterSets)). To get a random hexadecimal string with the same entropy `bits` as above (see [Real Need](#RealNeed) for description of what entropy `Bits` represents):
+`EntropyString` uses predefined `charset32` characters by default (reference [Character Sets](#CharacterSets)). To get a random hexadecimal string with the same entropy bits as above (see [Real Need](#RealNeed) for description of what entropy bits represents):
 
   ```elixir
   iex(1)> import EntropyString
@@ -154,7 +154,6 @@ To run the examples in the `examples.exs` file, first compile `EntropyString`
   ```
 
 and then launch the Elixir shell from the project base directory using the command below. The customization in `iex.exs` automatically loads `EntropyString` and runs the file `examples.exs`.
-
 
   ```bash
   > iex --dot-iex iex.exs
