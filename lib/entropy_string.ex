@@ -134,8 +134,7 @@ defmodule EntropyString do
   ##
   ##================================================================================================
   @doc """
-  Random string using **_charset_** characters with a 1 in a million chance of repeat for a
-  potential of 30 strings.
+  Random string using **_charset_** characters with a 1 in a million chance of repeat in 30 strings.
 
   Default **_CharSet_** is `charset32`.
 

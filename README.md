@@ -44,24 +44,6 @@ To run code snippets in the Elixir shell
   iex(1)>
   ```
 
-OWASP session ID using predefined base 32 characters:
-
-  ```elixir
-  iex(1)> import EntropyString.CharSet, only: [charset32: 0]
-  EntropyString.CharSet
-  iex(2)> EntropyString.session_id(charset32)
-  "rp7D4hGp2QNPT2FP9q3rG8tt29"
-  ```
-
-OWASP session ID using [RFC 4648](https://tools.ietf.org/html/rfc4648#section-5) file system and URL safe characters:
-
-  ```elixir
-  iex(1)> import EntropyString.CharSet, only: [charset64: 0]
-  EntropyString.CharSet
-  iex(2)> EntropyString.session_id(charset64)
-  "wpi3-HElCowpZbIjdNNjpz"
-  ```
-
 Generate a potential of _1 million_ random strings with _1 in a billion_ chance of repeat:
 
   ```elixir
@@ -91,6 +73,24 @@ Custom characters may be specified. Using uppercase hexadecimal characters:
   EntropyString.CharSet
   iex(3)> entropy_bits(ten_p(6), ten_p(9)) |> random_string(String.upcase(charset16))
   "E75C7A50972E4994ED"
+  ```
+
+Convenience functions exists for a variety of random string needs. For example, to create OWASP session ID using predefined base 32 characters:
+
+  ```elixir
+  iex(1)> import EntropyString.CharSet, only: [charset32: 0]
+  EntropyString.CharSet
+  iex(2)> EntropyString.session_id(charset32)
+  "rp7D4hGp2QNPT2FP9q3rG8tt29"
+  ```
+
+Or a 256 bit token using [RFC 4648](https://tools.ietf.org/html/rfc4648#section-5) file system and URL safe characters:
+
+  ```elixir
+  iex(1)> import EntropyString.CharSet, only: [charset64: 0]
+  EntropyString.CharSet
+  iex(2)> EntropyString.token(charset64)
+  "X2AZRHuNN3mFUhsYzHSE_r2SeZJ_9uqdw-j9zvPqU2O"
   ```
 
 #### Module `use`
@@ -239,7 +239,7 @@ Ah, now we're getting somewhere. The answer to question 3 might lead to the furt
 
 *I need to generate 10,000 random, unique IDs*.
 
-And the cat's out of the bag. We're getting at the real need, and it's not the same as the original statement. The developer needs *uniqueness* across a potentail total of some number of strings. The length of the string is a by-product of the uniqueness, not the goal.
+And the cat's out of the bag. We're getting at the real need, and it's not the same as the original statement. The developer needs *uniqueness* across some potential number of strings. The length of the string is a by-product of the uniqueness, not the goal, and should not be the primary specification for the random string.
 
 As noted in the [Overview](#Overview), guaranteeing uniqueness is difficult, so we'll replace that declaration with one of *probabilistic uniqueness* by asking:
 
@@ -294,19 +294,23 @@ As we\'ve seen in the previous sections, `EntropyString` provides predefined cha
 
   - CharSet 64: **ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_**
       * The file system and URL safe char set from [RFC 4648](https://tools.ietf.org/html/rfc4648#section-5).
+      &nbsp;
   - CharSet 32: **2346789bdfghjmnpqrtBDFGHJLMNPQRT**
       * Remove all upper and lower case vowels (including y)
       * Remove all numbers that look like letters
       * Remove all letters that look like numbers
       * Remove all letters that have poor distinction between upper and lower case values.
       The resulting strings don't look like English words and are easy to parse visually.
-
+      &nbsp;
   - CharSet 16: **0123456789abcdef**
       * Hexadecimal
+      &nbsp;
   - CharSet  8: **01234567**
       * Octal
+      &nbsp;
   - CharSet  4: **ATCG**
       * DNA alphabet. No good reason; just wanted to get away from the obvious.
+      &nbsp;
   - CharSet  2: **01**
       * Binary
 
@@ -344,7 +348,7 @@ The resulting string of __0__'s and __1__'s doesn't look quite right. Perhaps yo
   "HTTTHHTTHH"
   ```
 
-As another example, we saw in [Character Sets](#CharacterSets) the predefined characters for `charSet16` are **0123456789abcdef**. Suppose you like uppercase hexadecimal letters instead.
+As another example, we saw in [Character Sets](#CharacterSets) the predefined hex characters for `charSet16` are lowercase. Suppose you like uppercase hexadecimal letters instead.
 
   ```elixir
   iex(1)> defmodule HexString, do: use EntropyString, charset: "0123456789ABCDEF"
