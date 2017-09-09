@@ -82,6 +82,8 @@ defmodule EntropyString do
   ##
   ##================================================================================================
   @doc """
+  **_Deprecated: Explicitly use `1.0eNN` instead._**
+
   Convenience for specifying **_total_** number of strings or acceptable associated **_risk_** as
   power of ten.
 
@@ -249,9 +251,7 @@ defmodule EntropyString do
 
   A million potential base32 strings with a 1 in a billion chance of a repeat
 
-      total = EntropyString.ten_p(6)
-      risk = EntropyString.ten_p(9)
-      bits = EntropyString.entropy_bits(total, risk)
+      bits = EntropyString.entropy_bits(1.0e6, 1.0e9)
       charSet = EntropyString.CharSet.charset32
       string = EntropyString.random_string(bits, charSet)
 

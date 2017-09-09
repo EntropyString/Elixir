@@ -1,6 +1,7 @@
 defmodule EntropyBitsTest do
   use ExUnit.Case, async: true
 
+  # ten_p deprecated. CxTBD Remove on next major release
   import EntropyString, only: [entropy_bits: 2, ten_p: 1]
   
   test "bits for zero entropy" do
@@ -39,6 +40,7 @@ defmodule EntropyBitsTest do
     assert round(entropy_bits(1.0e5, 1.0e4)) == 46
     assert round(entropy_bits(1.0e5, 1.0e5)) == 49
 
+    # ten_p deprecated. CxTBD Remove on next major release
     ten3 = ten_p(3)
     ten4 = ten_p(4)
     ten5 = ten_p(5)

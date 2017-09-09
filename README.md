@@ -49,7 +49,7 @@ Generate a potential of _1 million_ random strings with _1 in a billion_ chance 
   ```elixir
   iex(1)> import EntropyString
   EntropyString
-  iex(2)> entropy_bits(ten_p(6), ten_p(9)) |> random_string
+  iex(2)> entropy_bits(1.0e6, 1.0e9) |> random_string
   "GhrB6fJbD6gTpT"
   ```
 
@@ -60,7 +60,7 @@ Generate a potential of _1 million_ random strings with _1 in a billion_ chance 
   EntropyString
   iex(2)> import EntropyString.CharSet, only: [charset16: 0]
   EntropyString.CharSet
-  iex(3)> entropy_bits(ten_p(6), ten_p(9)) |> random_string(charset16)
+  iex(3)> entropy_bits(1.0e6, 1.0e9) |> random_string(charset16)
   "acc071449951325cc5"
   ```
 
@@ -71,7 +71,7 @@ Custom characters may be specified. Using uppercase hexadecimal characters:
   EntropyString
   iex(2)> import EntropyString.CharSet, only: [charset16: 0]
   EntropyString.CharSet
-  iex(3)> entropy_bits(ten_p(6), ten_p(9)) |> random_string(String.upcase(charset16))
+  iex(3)> entropy_bits(1.0e6, 1.0e9) |> random_string(String.upcase(charset16))
   "E75C7A50972E4994ED"
   ```
 
@@ -492,7 +492,7 @@ Note the number of bytes needed is dependent on the number of characters in the 
   ```elixir
   iex(1)> defmodule Id do
   ...>   use EntropyString
-  ...>   @bits entropy_bits(ten_p(6), ten_p(9))
+  ...>   @bits entropy_bits(1.0e6, 1.0e9)
   ...>   def random, do: Id.random_string(@bits)
   ...> end
   {:module, Id,
