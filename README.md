@@ -13,6 +13,7 @@ Efficiently generate cryptographically strong random strings of specified entrop
  - [Custom Characters](#CustomCharacters)
  - [Efficiency](#Efficiency)
  - [Custom Bytes](#CustomBytes)
+ - [Entropy Bits](#EntropyBits)
  - [Take Away](#TakeAway)
 
 ### Installation
@@ -203,15 +204,15 @@ Further commands can use the loaded modules:
 
 ### <a name="Overview"></a>Overview
 
-`EntropyString` provides easy creation of randomly generated strings of specific entropy using various character sets. Such strings are needed when generating, for example, random IDs and you don't want the overkill of a GUID, or for ensuring that some number of items have unique identifiers.
+`EntropyString` provides easy creation of randomly generated strings of specific entropy using various character sets. Such strings are needed as unique identifiers when generating, for example, random IDs and you don't want the overkill of a GUID.
 
-A key concern when generating such strings is that they be unique. To truly guarantee uniqueness requires either deterministic generation (e.g., a counter) that is not random, or that each newly created random string be compared against all existing strings. When ramdoness is required, the overhead of storing and comparing all strings is often too onerous and a different tack is needed.
+A key concern when generating such strings is that they be unique. Guaranteed uniqueness, however,, requires either deterministic generation (e.g., a counter) that is not random, or that each newly created random string be compared against all existing strings. When ramdoness is required, the overhead of storing and comparing strings is often too onerous and a different tack is chosen.
 
-A common strategy is to replace the *guarantee of uniqueness* with a weaker but often sufficient *probabilistic uniqueness*. Specifically, rather than being absolutely sure of uniqueness, we settle for a statement such as *"there is less than a 1 in a billion chance that two of my strings are the same"*. This strategy requires much less overhead, but does require we have some manner of qualifying what we mean by, for example, *"there is less than a 1 in a billion chance that 1 million strings of this form will have a repeat"*.
+A common strategy is to replace the *guarantee of uniqueness* with a weaker but often sufficient *probabilistic uniqueness*. Specifically, rather than being absolutely sure of uniqueness, we settle for a statement such as *"there is less than a 1 in a billion chance that two of my strings are the same"*. This strategy requires much less overhead, but does require we have some manner of qualifying what we mean by *"there is less than a 1 in a billion chance that 1 million strings of this form will have a repeat"*.
 
-Understanding probabilistic uniqueness requires some understanding of [*entropy*](https://en.wikipedia.org/wiki/Entropy_(information_theory)) and of estimating the probability of a [*collision*](https://en.wikipedia.org/wiki/Birthday_problem#Cast_as_a_collision_problem) (i.e., the probability that two strings in a set of randomly generated strings might be the same).  Happily, you can use `EntropyString` without a deep understanding of these topics.
+Understanding probabilistic uniqueness of random strings requires an understanding of [*entropy*](https://en.wikipedia.org/wiki/Entropy_(information_theory)) and of estimating the probability of a [*collision*](https://en.wikipedia.org/wiki/Birthday_problem#Cast_as_a_collision_problem) (i.e., the probability that two strings in a set of randomly generated strings might be the same). The blog posting [Hash Collision Probabilities](http://preshing.com/20110504/hash-collision-probabilities/) provides an excellent overview of deriving an expression for calculating the probability of a collision in some number of hashes using a perfect hash with an N-bit output. The [Entropy Bits](#EntropyBits) section below discribes how `EntropyString` takes this idea a step further to address a common need in generating unique identifiers.
 
-We'll begin investigating `EntropyString` by considering our [Real Need](Read%20Need) when generating random strings.
+We'll begin investigating `EntropyString` and this common need by considering our [Real Need](#RealNeed) when generating random strings.
 
 [TOC](#TOC)
 
@@ -257,32 +258,32 @@ Not only is this statement more specific, there is no mention of string length. 
 
 How do you address this need using a library designed to generate strings of specified length?  Well, you don't directly, because that library was designed to answer the originally stated need, not the real need we've uncovered. We need a library that deals with probabilistic uniqueness of a total number of some strings. And that's exactly what `EntropyString` does.
 
-Let's use `EntropyString` to help this developer by generating 5 IDs:
+Let's use `EntropyString` to help this developer generate 5 hexadecimal IDs from a pool of a potentail 10,000 IDs with a 1 in a milllion chance of a repeat:
 
   ```elixir
   iex(1)> import EntropyString
   EntropyString
   iex(2)> import EntropyString.CharSet, only: [charset16: 0]
   EntropyString.CharSet
-  iex(3)> bits = entropy_bits(10000, 1000000)
+  iex(3)> bits = entropy_bits(10000, 1.0e6)
   45.50699332842307
   iex(4)> for x <- :lists.seq(1,5), do: random_string(bits, charset16)
   ["85e442fa0e83", "a74dc126af1e", "368cd13b1f6e", "81bf94e1278d", "fe7dec099ac9"]
   ```
 
-To generate the IDs, we first use
+Examining the above code,
 
   ```elixir
-  bits = entropy_bits(10000, 1000000)
+  bits = entropy_bits(10000, 1.0e6)
   ```
 
-to determine how much entropy is needed to generate a potential of _10000 strings_ while satisfy the probabilistic uniqueness of a _1 in a million risk_ of repeat. We can see from the output of the Elixir shell it's about **45.51** bits. Inside the list comprehension we used
+is used to determine how much entropy is needed to satisfy the probabilistic uniqueness of a **1 in a million** risk of repeat in a total of **10,000** strings. We didn't print the result, but if you did you'd see it's about **45.51** bits. Then
 
   ```elixir
   random_string(bits, charset16)
   ```
 
-to actually generate a random string of the specified entropy using hexadecimal (charSet16) characters. Looking at the IDs, we can see each is 12 characters long. Again, the string length is a by-product of the characters used to represent the entropy we needed. And it seems the developer didn't really need 16 characters after all.
+is used to actually generate a random string of the specified entropy using hexadecimal (charSet16) characters. Looking at the IDs, we can see each is 12 characters long. Again, the string length is a by-product of the characters used to represent the entropy we needed. And it seems the developer didn't really need 16 characters after all.
 
 Finally, given that the strings are 12 hexadecimals long, each string actually has an information carrying capacity of 12 * 4 = 48 bits of entropy (a hexadecimal character carries 4 bits). That's fine. Assuming all characters are equally probable, a string can only carry entropy equal to a multiple of the amount of entropy represented per character. `EntropyString` produces the smallest strings that *exceed* the specified entropy.
 
@@ -471,6 +472,28 @@ Note the number of bytes needed is dependent on the number of characters in the 
   iex(2)> bytes_needed(32, charset32())
   5
   ```
+
+[TOC](#TOC)
+
+### <a name="EntropyBits"></a>Entropy Bits
+
+Thus far we've avoided the mathematics behind the calculation of the entropy bits required to specify a risk that some number random strings will not have a repeat. As noted in the [Overview](#Overview), the posting [Hash Collision Probabilities](http://preshing.com/20110504/hash-collision-probabilities/) derives an expression, based on the well-known [Birthday Problem](https://en.wikipedia.org/wiki/Birthday_problem#Approximations), for calculating the probability of a collision in some number of hashes (denoted by `k`) using a perfect hash with an output of `M` bits:
+
+![Hash Collision Probability](images/HashCollision.png)
+
+There are two slight tweaks to this equation as compared to the one in the referenced posting. `M` is used for the total number of possible hashes and an equation is formed by explicitly specifying that the expression in the posting is approximately equal to `1/n`.
+
+More importantly, the above equation isn't in a form conducive to our entropy string needs. The equation was derived for a set number of possible hashes and yields a probability, which is fine for hash collisions but isn't quite right for calculating the bits of entropy needed for our random strings.
+
+The first thing we'll change is to use `M = 2^N`, where `N` is the number of entropy bits. This simply states that the number of possible strings is equal to the number of possible values using `N` bits:
+
+![N-Bit Collision Probability](images/NBitCollision.png)
+
+Now we massage the equation to represent `N` as a function of `k` and `n`:
+
+![Entropy Bits Equation](images/EntropyBits.png)
+
+The final line represents the number of entropy bits `N` as a function of the number of potential strings `k` and the risk of repeat of 1 in `n`, exactly what we want. Furthermore, the equation is in a form that avoids really large numbers in calculating `N` since we immediately take a logarithm of each large value `k` and `n`.
 
 [TOC](#TOC)
 

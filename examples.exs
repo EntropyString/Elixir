@@ -9,6 +9,8 @@
 #   > iex
 #
 
+alias EntropyString.CharSet
+
 #--------------------------------------------------------------------------------------------------
 # Id
 #   Predefined base 32 characters
@@ -23,31 +25,31 @@ IO.puts "  Session ID: #{Id.session_id}\n"
 # Base64Id
 #   Predefined URL and file system safe characters
 #--------------------------------------------------------------------------------------------------
-defmodule Base64Id, do: use EntropyString, charset: EntropyString.CharSet.charset64
+defmodule Base64Id, do: use EntropyString, charset: CharSet.charset64
 
 IO.puts "Base64Id: Predefined URL and file system safe CharSet"
 IO.puts "  Characters: #{Base64Id.charset}"
 IO.puts "  Session ID: #{Base64Id.session_id}\n"
 
 #--------------------------------------------------------------------------------------------------
-# HexId
+# Hex Id
 #   Predefined hex characters
 #--------------------------------------------------------------------------------------------------
-defmodule HexId, do: use EntropyString, charset: EntropyString.CharSet.charset16
+defmodule Hex, do: use EntropyString, charset: CharSet.charset16
 
-IO.puts "HexId: Predefined hex CharSet"
-IO.puts "  Characters: #{HexId.charset}"
-IO.puts "  Small ID: #{HexId.small_id}\n"
+IO.puts "Hex: Predefined hex CharSet"
+IO.puts "  Characters: #{Hex.charset}"
+IO.puts "  Small ID: #{Hex.small_id}\n"
 
 #--------------------------------------------------------------------------------------------------
-# UpperHexId
+# Uppercase Hex Id
 #   Uppercase hex characters
 #--------------------------------------------------------------------------------------------------
-defmodule UpperHexId, do: use EntropyString, charset: "0123456789ABCDEF"
+defmodule UpperHex, do: use EntropyString, charset: "0123456789ABCDEF"
 
-IO.puts "UpperHexId: Upper case hex CharSet"
-IO.puts "  Characters: #{UpperHexId.charset}"
-IO.puts "  Medium ID: #{UpperHexId.medium_id}\n"
+IO.puts "UpperHex: Upper case hex CharSet"
+IO.puts "  Characters: #{UpperHex.charset}"
+IO.puts "  Medium ID: #{UpperHex.medium_id}\n"
 
 #--------------------------------------------------------------------------------------------------
 # DingoSky
@@ -70,7 +72,7 @@ IO.puts "  DingoSky ID: #{DingoSky.id}\n"
 #   256 entropy bit token
 #--------------------------------------------------------------------------------------------------
 defmodule MyServer do
-  use EntropyString, charset: EntropyString.CharSet.charset64
+  use EntropyString, charset: CharSet.charset64
 
   @bits 256
 
@@ -80,5 +82,3 @@ end
 IO.puts "MyServer: 256 entropy bit token"
 IO.puts "  Characters: #{MyServer.charset}"
 IO.puts "  MyServer Token: #{MyServer.token}\n"
-
-
