@@ -50,11 +50,18 @@ defmodule EntropyString do
       charset =
         case unquote(opts)[:charset] do
           nil -> CharSet.charset32
-          charset ->
+          :charset64 -> CharSet.charset64
+          :charset32 -> CharSet.charset32
+          :charset16 -> CharSet.charset16
+          :charset8  -> CharSet.charset8
+          :charset4  -> CharSet.charset4
+          :charset2  -> CharSet.charset2
+          charset when is_binary(charset) ->
             case validate(charset) do
               true -> charset
               {_, reason} -> raise reason
             end
+          charset -> raise "Invalid predefined charset: #{charset}"
         end
 
       @entropy_string_charset charset

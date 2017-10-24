@@ -35,7 +35,7 @@ IO.puts "  Session ID: #{Base64Id.session_id}\n"
 # Hex Id
 #   Predefined hex characters
 #--------------------------------------------------------------------------------------------------
-defmodule Hex, do: use EntropyString, charset: CharSet.charset16
+defmodule Hex, do: use EntropyString, charset: :charset16
 
 IO.puts "Hex: Predefined hex CharSet"
 IO.puts "  Characters: #{Hex.charset}"

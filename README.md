@@ -126,6 +126,16 @@ The default **_CharSet_** for a module can be specified by passing the `charset`
   "f54a61dd3018cbdb1c495a15b5e7f383"
   ```
 
+The `use` macro also accepts an atom representing the **_CharSet_** to use:
+
+  ```elixir
+  iex(1)> defmodule Octal, do: use EntropyString, charset: :charset8
+  {:module, Octal,
+     ...
+  iex> Octal.medium_id
+  "26326234546022500507466"
+  ```
+
 Passing a `String` as the `charset` option specifies custom characters to use in the module:
 
   ```elixir

@@ -91,6 +91,7 @@ defmodule EntropyString.CharSet do
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
   """
   def charset64, do: @charset64
+
   @doc """
   Strings that don't look like English words and are easy to parse visually
 
@@ -102,18 +103,21 @@ defmodule EntropyString.CharSet do
     - remove all letters that have poor distinction between upper and lower case values
   """
   def charset32, do: @charset32
+
   @doc """
   Lowercase hexidecimal
 
       "0123456789abcdef"
   """
   def charset16, do: @charset16
+
   @doc """
   Octal characters
 
       "01234567"
   """
   def charset8,  do: @charset8
+
   @doc """
   DNA alphabet
 
@@ -122,6 +126,7 @@ defmodule EntropyString.CharSet do
   No good reason; just wanted to get away from the obvious
   """
   def charset4,  do: @charset4
+
   @doc """
   Binary characters
 
