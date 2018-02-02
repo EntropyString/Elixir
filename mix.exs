@@ -2,20 +2,18 @@ defmodule EntropyString.Mixfile do
   use Mix.Project
 
   def project do
-    [ app: :entropy_string,
-      version: "1.0.6",
+    [
+      app: :entropy_string,
+      version: "1.0.7",
       elixir: "~> 1.4",
       deps: deps(),
-
       description: description(),
       package: package()
     ]
   end
 
   defp deps do
-    [{:earmark, "~> 1.0", only: :dev},
-     {:ex_doc, "~> 0.16", only: :dev}
-    ]
+    [{:earmark, "~> 1.0", only: :dev}, {:ex_doc, "~> 0.16", only: :dev}]
   end
 
   defp description do
@@ -25,8 +23,10 @@ defmodule EntropyString.Mixfile do
   end
 
   defp package do
-    [maintainers: ["Paul Rogers"],
-     licenses: ["MIT"],
-     links: %{"GitHub" => "https://github.com/EntropyString/Elixir" }]
-  end    
+    [
+      maintainers: ["Paul Rogers"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/EntropyString/Elixir"}
+    ]
+  end
 end
