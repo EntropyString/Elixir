@@ -20,7 +20,7 @@ defmodule EntropyString.Mixfile do
 
   defp description do
     """
-Efficiently generate cryptographically strong random strings of specified entropy from various character sets.
+    Efficiently generate cryptographically strong random strings of specified entropy from various character sets.
     """
   end
 
