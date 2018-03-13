@@ -4,7 +4,7 @@ defmodule EntropyString.Mixfile do
   def project do
     [
       app: :entropy_string,
-      version: "1.0.7",
+      version: "1.1.0",
       elixir: "~> 1.4",
       deps: deps(),
       description: description(),
@@ -13,7 +13,8 @@ defmodule EntropyString.Mixfile do
   end
 
   defp deps do
-    [{:earmark, "~> 1.0", only: :dev}, {:ex_doc, "~> 0.16", only: :dev}]
+    [{:earmark, "~> 1.2", only: :dev},
+     {:ex_doc, "~> 0.18", only: :dev}]
   end
 
   defp description do

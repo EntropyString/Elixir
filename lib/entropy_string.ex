@@ -31,10 +31,8 @@ defmodule EntropyString do
 
   Ten thousand potential hexidecimal strings with a 1 in 10 million chance of repeat
 
-      bits = EntropyString.Entropy.bits(10000, 10000000)
-      charSet = EntropyString.CharSet.charset16
-      string = EntropyString.random_string(bits, charSet)
-
+      bits = EntropyString.bits(10000, 10000000)
+      EntropyString.random(bits, :charset16)
       "9e9b34d6f69ea"
 
   """
@@ -87,61 +85,149 @@ defmodule EntropyString do
   @doc false
   defmacro __before_compile__(_env) do
     quote do
-      def small_id, do: small_id(@entropy_string_charset)
-      def medium_id, do: medium_id(@entropy_string_charset)
-      def large_id, do: large_id(@entropy_string_charset)
-      def session_id, do: session_id(@entropy_string_charset)
+      @doc """
+      Random string using **_charset_** characters with a 1 in a million chance of repeat in
+      30 strings.
+
+      Default **_CharSet_** is `charset32`.
+
+      ## Example
+          EntropyString.small()
+          "nGrqnt"
+      """
+      def small, do: small(@entropy_string_charset)
+
+      @doc """
+      Random string using **_charset_** characters with a 1 in a billion chance of repeat for a
+      million potential strings.
+
+      Default **_CharSet_** is `charset32`.
+
+      ## Example
+          EntropyString.medium()
+          "nndQjL7FLR9pDd"
+      """
+      def medium, do: medium(@entropy_string_charset)
+
+      @doc """
+
+      Random string using **_charset_** characters with a 1 in a trillion chance of repeat for a
+      billion potential strings.
+
+      Default **_CharSet_** is `charset32`.
+
+      ## Example
+          EntropyString.large()
+          "NqJLbG8htr4t64TQmRDB"
+      """
+      def large, do: large(@entropy_string_charset)
+
+      @doc """
+      Random string using **_charset_** characters suitable for 128-bit OWASP Session ID
+
+      Default **_CharSet_** is `charset32`.
+
+      ## Example
+          EntropyString.session()
+          "6pLfLgfL8MgTn7tQDN8tqPFR4b"
+      """
+      def session, do: session(@entropy_string_charset)
+
+      @doc """
+      Random string using **_charset_** characters with 256 bits of entropy.
+
+      Default **_CharSet_** is the base 64 URL and file system safe character set.
+
+      ## Example
+          EntropyString.token()
+          "zHZ278Pv_GaOsmRYdBIR5uO8Tt0OWSESZbVuQye6grt"
+      """
       def token, do: token(@entropy_string_charset)
-      def random_string(bits), do: random_string(bits, @entropy_string_charset)
+
+      @doc """
+      Random string of entropy **_bits_** using module characters
+
+        - **_bits_** - entropy bits for string
+          - non-negative integer
+          - predefined atom
+
+      Returns string of at least entropy **_bits_** using module characters; or
+
+        - `{:error, "Negative entropy"}` if **_bits_** is negative.
+        - `{:error, reason}` if `EntropyString.CharSet.validate(charset)` is not `true`.
+
+      Since the generated random strings carry an entropy that is a multiple of the bits per
+      module characters, the returned entropy is the minimum that equals or exceeds the
+      specified **_bits_**.
+
+      ## Example
+
+      A million potential strings (assuming :charset32 characters) with a 1 in a billion chance
+      of a repeat
+
+          bits = EntropyString.bits(1.0e6, 1.0e9)
+
+          random(bits)
+          "NbMbLrj9fBbQP6"
+
+          random(:session)
+          "CeElDdo7HnNDuiWwlFPPq0"
+
+      """
+      def random(bits), do: random(bits, @entropy_string_charset)
+
+      @doc """
+      The current CharSet in use
+      """
       def charset, do: @entropy_string_charset
+
+      @doc """
+      **_Deprecated_**: Use `small/1` instead
+      """
+      def small_id, do: small(@entropy_string_charset)
+
+      @doc """
+      **_Deprecated_**: Use `medium/1` instead
+      """
+      def medium_id, do: medium(@entropy_string_charset)
+
+      @doc """
+      **_Deprecated_**: Use `large/1` instead
+      """
+      def large_id, do: large(@entropy_string_charset)
+
+      @doc """
+      **_Deprecated_**: Use `session/1` instead
+      """
+      def session_id, do: session(@entropy_string_charset)
     end
   end
 
-  ## ================================================================================================
-  ##
-  ## ten_p/1
-  ##
-  ## ================================================================================================
+  ## -----------------------------------------------------------------------------------------------
+  ##  bits/2
+  ## -----------------------------------------------------------------------------------------------
   @doc """
-  **_Deprecated: Explicitly use `1.0eNN` instead._**
-
-  Convenience for specifying **_total_** number of strings or acceptable associated **_risk_** as
-  power of ten.
-
-  ## Example
-
-      iex> import EntropyString, only: [ten_p: 1]
-      iex> ten_p(12)
-      1.0e12
-  """
-  def ten_p(power), do: :math.pow(10, power)
-
-  ## ================================================================================================
-  ##
-  ## bits/2
-  ##
-  ## ================================================================================================
-  @doc """
-  Entropy bits required for **_total_** number of strings with a given **_risk_**
+  Bits of entropy required for **_total_** number of strings with a given **_risk_**
 
     - **_total_** - potential number of strings
     - **_risk_**  - risk of repeat in **_total_** strings
 
   ## Example
 
-  Entropy bits required for **_30_** strings with a **_1 in a million_** chance of repeat
+  Bits of entropy for **_30_** strings with a **_1 in a million_** chance of repeat
 
-      iex> import EntropyString, only: [entropy_bits: 2]
-      iex> bits = entropy_bits(30, 1000000)
+      iex> import EntropyString, only: [bits: 2]
+      iex> bits = bits(30, 1000000)
       iex> round(bits)
       29
   """
-  def entropy_bits(0, _), do: 0
-  def entropy_bits(_, 0), do: 0
-  def entropy_bits(total, _) when total < 0, do: NaN
-  def entropy_bits(_, risk) when risk < 0, do: NaN
+  @since "1.0"
+  def bits(0, _), do: 0
+  def bits(_, 0), do: 0
+  def bits(total, _) when total < 0, do: NaN
+  def bits(_, risk) when risk < 0, do: NaN
 
-  def entropy_bits(total, risk) when is_number(total) and is_number(risk) do
+  def bits(total, risk) when is_number(total) and is_number(risk) do
     n =
       cond do
         total < 1000 ->
@@ -154,31 +240,36 @@ defmodule EntropyString do
     n + :math.log2(risk) - 1
   end
 
-  def entropy_bits(_, _), do: NaN
+  def bits(_, _), do: NaN
 
-  ## ================================================================================================
-  ##
-  ## small_id/1
-  ##
-  ## ================================================================================================
+  ## -----------------------------------------------------------------------------------------------
+  ##  small/1
+  ## -----------------------------------------------------------------------------------------------
   @doc """
   Random string using **_charset_** characters with a 1 in a million chance of repeat in 30 strings.
 
   Default **_CharSet_** is `charset32`.
 
   ## Example
-      EntropyString.small_id
+      EntropyString.small()
       "nGrqnt"
+
+      EntropyString.small(:charset16)
+      "7bc250e5"
+
   """
-  def small_id(charset \\ CharSet.charset32()) do
-    random_string(29, charset)
+  @since "1.1.0"
+  def small(charset \\ :charset32)
+
+  def small(charset) when is_atom(charset) do
+    random(bits_from_atom(:small), charset_from_atom(charset))
   end
 
-  ## ================================================================================================
-  ##
-  ## medium_id/1
-  ##
-  ## ================================================================================================
+  def small(charset), do: random(bits_from_atom(:small), charset)
+
+  ## -----------------------------------------------------------------------------------------------
+  ##  medium/1
+  ## -----------------------------------------------------------------------------------------------
   @doc """
   Random string using **_charset_** characters with a 1 in a billion chance of repeat for a million
   potential strings.
@@ -186,18 +277,25 @@ defmodule EntropyString do
   Default **_CharSet_** is `charset32`.
 
   ## Example
-      EntropyString.medium_id(charSet)
+      EntropyString.medium()
       "nndQjL7FLR9pDd"
+
+      EntropyString.medium(:charset16)
+      "b95d23b299eeb9bbe6"
+
   """
-  def medium_id(charset \\ CharSet.charset32()) do
-    random_string(69, charset)
+  @since "1.1.0"
+  def medium(charset \\ :charset32)
+
+  def medium(charset) when is_atom(charset) do
+    random(bits_from_atom(:medium), charset_from_atom(charset))
   end
 
-  ## ================================================================================================
-  ##
-  ## large_id/1
-  ##
-  ## ================================================================================================
+  def medium(charset), do: random(bits_from_atom(:medium), charset)
+
+  ## -----------------------------------------------------------------------------------------------
+  ##  large/1
+  ## -----------------------------------------------------------------------------------------------
   @doc """
   Random string using **_charset_** characters with a 1 in a trillion chance of repeat for a billion
   potential strings.
@@ -206,18 +304,24 @@ defmodule EntropyString do
 
   ## Example
 
-      EntropyString.large_id(charSet)
+      EntropyString.large()
       "NqJLbG8htr4t64TQmRDB"
+
+      EntropyString.large(:charset16)
+      "f6c4d04cef266a5c3a7950f90"
   """
-  def large_id(charset \\ CharSet.charset32()) do
-    random_string(99, charset)
+  @since "1.1.0"
+  def large(charset \\ :charset32)
+
+  def large(charset) when is_atom(charset) do
+    random(bits_from_atom(:large), charset_from_atom(charset))
   end
 
-  ## ================================================================================================
-  ##
-  ## session_id/1
-  ##
-  ## ================================================================================================
+  def large(charset), do: random(bits_from_atom(:large), charset)
+
+  ## -----------------------------------------------------------------------------------------------
+  ##  session/1
+  ## -----------------------------------------------------------------------------------------------
   @doc """
   Random string using **_charset_** characters suitable for 128-bit OWASP Session ID
 
@@ -225,18 +329,24 @@ defmodule EntropyString do
 
   ## Example
 
-      EntropyString.session_id(charSet)
+      EntropyString.session()
       "6pLfLgfL8MgTn7tQDN8tqPFR4b"
+
+      EntropyString.session(:charset64)
+      "VzhprMROlM6Iy2Pk1IRCqR"
   """
-  def session_id(charset \\ CharSet.charset32()) do
-    random_string(128, charset)
+  @since "1.1.0"
+  def session(charset \\ :charset32)
+
+  def session(charset) when is_atom(charset) do
+    random(bits_from_atom(:session), charset_from_atom(charset))
   end
 
-  ## ================================================================================================
-  ##
-  ## token/1
-  ##
-  ## ================================================================================================
+  def session(charset), do: random(bits_from_atom(:session), charset)
+
+  ## -----------------------------------------------------------------------------------------------
+  ##  token/1
+  ## -----------------------------------------------------------------------------------------------
   @doc """
   Random string using **_charset_** characters with 256 bits of entropy.
 
@@ -244,23 +354,34 @@ defmodule EntropyString do
 
   ## Example
 
-      EntropyString.token
+      EntropyString.token()
       "zHZ278Pv_GaOsmRYdBIR5uO8Tt0OWSESZbVuQye6grt"
+
+      EntropyString.token(:charset32)
+      "7fRgrB4JtqQB8gphhf8T7bppttJQqJ3PTPFjMjGQbhgJNR9FNNHD"
   """
-  def token(charset \\ CharSet.charset64()) do
-    random_string(256, charset)
+  @since "1.0"
+  def token(charset \\ CharSet.charset64())
+
+  def token(charset) when is_atom(charset) do
+    random(bits_from_atom(:token), charset_from_atom(charset))
   end
 
-  ## ================================================================================================
-  ##
-  ## random_string/2
-  ##
-  ## ================================================================================================
+  def token(charset), do: random(bits_from_atom(:token), charset)
+
+  ## -----------------------------------------------------------------------------------------------
+  ##  random/2
+  ## -----------------------------------------------------------------------------------------------
   @doc """
   Random string of entropy **_bits_** using **_charset_** characters
 
     - **_bits_** - entropy bits for string
+       - non-negative integer
+       - predefined atom
     - **_charset_** - CharSet to use
+       - `EntropyString.CharSet` 
+       - predefined atom
+       - Valid `String` representing the characters for the `EntropyString.CharSet`
 
   Returns string of at least entropy **_bits_** using characters from **_charset_**; or
 
@@ -271,29 +392,37 @@ defmodule EntropyString do
   for **_charset_**, the returned entropy is the minimum that equals or exceeds the specified
   **_bits_**.
 
-  Default **_CharSet_** is `charset32`.
-
-  ## Example
+  ## Examples
 
   A million potential base32 strings with a 1 in a billion chance of a repeat
 
-      bits = EntropyString.entropy_bits(1.0e6, 1.0e9)
-      charSet = EntropyString.CharSet.charset32
-      string = EntropyString.random_string(bits, charSet)
-
+      bits = EntropyString.bits(1.0e6, 1.0e9)
+      EntropyString.random(bits)
       "NbMbLrj9fBbQP6"
+
+  A million potential hex strings with a 1 in a billion chance of a repeat
+
+      EntropyString.random(bits, :charset16)
+      "0746ae8fbaa2fb4d36"
+
+  A random session ID using URL and File System safe characters
+
+      EntropyString.random(:session, :charset64)
+      "txSdE3qBK2etQtLyCFNHGD"
+
   """
-  def random_string(bits, charset \\ EntropyString.CharSet.charset32())
+  def random(bits, charset \\ :charset32)
 
-  ## ------------------------------------------------------------------------------------------------
-  ## Invalid bits
-  ## ------------------------------------------------------------------------------------------------
-  def random_string(bits, _charset) when bits < 0, do: {:error, "Negative entropy"}
+  ## -----------------------------------------------------------------------------------------------
+  ##  Invalid bits
+  ## -----------------------------------------------------------------------------------------------
+  def random(bits, _charset) when bits < 0, do: {:error, "Negative entropy"}
 
-  ## ------------------------------------------------------------------------------------------------
-  ## Call _random_string/2 if valid charset
-  ## ------------------------------------------------------------------------------------------------
-  def random_string(bits, charset) do
+  def random(bits, charset) when is_atom(bits), do: random(bits_from_atom(bits), charset)
+  
+  def random(bits, charset) when is_atom(charset), do: random(bits, charset_from_atom(charset))
+
+  def random(bits, charset) do
     with_charset(charset, fn ->
       byteCount = CharSet.bytes_needed(bits, charset)
       bytes = :crypto.strong_rand_bytes(byteCount)
@@ -301,16 +430,19 @@ defmodule EntropyString do
     end)
   end
 
-  ## ================================================================================================
-  ##
-  ## random_string/3
-  ##
-  ## ================================================================================================
+  ## -----------------------------------------------------------------------------------------------
+  ##  random/3
+  ## -----------------------------------------------------------------------------------------------
   @doc """
   Random string of entropy **_bits_** using **_charset_** characters and specified **_bytes_**
 
-    - **_bits_** - entropy bits for string
+    - **_bits_** - entropy bits
+       - non-negative integer
+       - predefined atom
     - **_charset_** - CharSet to use
+       - `EntropyString.CharSet` 
+       - predefined atom
+       - Valid `String` representing the characters for the `EntropyString.CharSet`
     - **_bytes_** - Bytes to use
 
   Returns random string of at least entropy **_bits_**; or
@@ -327,16 +459,23 @@ defmodule EntropyString do
 
   30 potential random hex strings with a 1 in a million chance of a repeat
 
-      iex> bits = EntropyString.entropy_bits(30, 1000000)
-      iex> charSet = EntropyString.CharSet.charset16
+      iex> bits = EntropyString.bits(30, 1000000)
       iex> bytes = <<14, 201, 32, 143>>
-      iex> EntropyString.random_string(bits, charSet, bytes)
+      iex> EntropyString.random(bits, :charset16, bytes)
       "0ec9208f"
 
   Use `EntropyString.CharSet.bytes_needed(bits, charset)` to determine how many **_bytes_** are
   actually needed.
   """
-  def random_string(bits, charset, bytes) do
+  def random(bits, charset, bytes) when is_atom(bits) do
+    random(bits_from_atom(bits), charset, bytes)
+  end
+
+  def random(bits, charset, bytes) when is_atom(charset) do
+    random(bits, charset_from_atom(charset), bytes)
+  end
+  
+  def random(bits, charset, bytes) do
     with_charset(charset, fn ->
       case validate_byte_count(bits, charset, bytes) do
         true -> _random_string_bytes(bits, charset, bytes)
@@ -361,11 +500,9 @@ defmodule EntropyString do
     _random_string_count(slice, ndxFn, charset, bytes, <<char::binary, chars::binary>>)
   end
 
-  ## ================================================================================================
-  ##
-  ## validate_byte_count/3
-  ##
-  ## ================================================================================================
+  ## -----------------------------------------------------------------------------------------------
+  ##  validate_byte_count/3
+  ## -----------------------------------------------------------------------------------------------
   @doc """
   Validate number of **_bytes_** is sufficient to generate random strings with entropy **_bits_**
   using **_charset_**
@@ -378,7 +515,8 @@ defmodule EntropyString do
 
     - **_bytes_** count must be sufficient to generate entropy **_bits_** string from **_charset_**
 
-  Use `EntropyString.CharSet.bytes_needed(bits, charset)` to determine how many **_bytes_** are needed
+  Use `EntropyString.CharSet.bytes_needed(bits, charset)` to determine how many **_bytes_** are
+  needed
   """
   def validate_byte_count(bits, charset, bytes) when is_binary(bytes) do
     need = CharSet.bytes_needed(bits, charset)
@@ -394,13 +532,10 @@ defmodule EntropyString do
     end
   end
 
-  ## ================================================================================================
-  ##
-  ## ndx_fn/1
-  ##
-  ## Return function to pull charset bits_per_char bits at position slice of bytes
-  ##
-  ## ================================================================================================
+  ## -----------------------------------------------------------------------------------------------
+  ##  ndx_fn/1
+  ##  Return function to pull charset bits_per_char bits at position slice of bytes
+  ## -----------------------------------------------------------------------------------------------
   defp ndx_fn(charset) do
     bitsPerChar = CharSet.bits_per_char(charset)
 
@@ -411,13 +546,10 @@ defmodule EntropyString do
     end
   end
 
-  ## ================================================================================================
-  ##
-  ## with_charset/1
-  ##
-  ## For pre-defined CharSet, skip charset validation
-  ##
-  ## ================================================================================================
+  ## -----------------------------------------------------------------------------------------------
+  ##  with_charset/1
+  ##  For pre-defined CharSet, skip charset validation
+  ## -----------------------------------------------------------------------------------------------
   defp with_charset(charset, doFn) do
     # Pre-defined charset does not require validation
     case is_predefined_charset(charset) do
@@ -432,9 +564,82 @@ defmodule EntropyString do
     end
   end
 
+  defp is_predefined_charset(:charset2), do: true
+  defp is_predefined_charset(:charset4), do: true
+  defp is_predefined_charset(:charset8), do: true
+  defp is_predefined_charset(:charset16), do: true
+  defp is_predefined_charset(:charset32), do: true
+  defp is_predefined_charset(:charset64), do: true
   defp is_predefined_charset(charset) do
     charset == CharSet.charset64() or charset == CharSet.charset32() or
       charset == CharSet.charset16() or charset == CharSet.charset8() or
       charset == CharSet.charset4() or charset == CharSet.charset2()
   end
+
+  ## -----------------------------------------------------------------------------------------------
+  ##  Convert bits atom to bits integer
+  ## -----------------------------------------------------------------------------------------------
+  defp bits_from_atom(:small), do: 29
+  defp bits_from_atom(:medium), do: 69
+  defp bits_from_atom(:large), do: 99
+  defp bits_from_atom(:session), do: 128
+  defp bits_from_atom(:token), do: 256
+
+  ## -----------------------------------------------------------------------------------------------
+  ##  Convert charset atom to EntropyString.CharSet
+  ## -----------------------------------------------------------------------------------------------
+  defp charset_from_atom(:charset2), do: CharSet.charset2()
+  defp charset_from_atom(:charset4), do: CharSet.charset4()
+  defp charset_from_atom(:charset8), do: CharSet.charset8()
+  defp charset_from_atom(:charset16), do: CharSet.charset16()
+  defp charset_from_atom(:charset32), do: CharSet.charset32()
+  defp charset_from_atom(:charset64), do: CharSet.charset64()
+
+  ## ===============================================================================================
+  ##
+  ##  Deprecated functions
+  ##
+  ## ===============================================================================================
+  @doc """
+  **_Deprecated_**: Use `small/1` instead
+  """
+  @deprecated "Use `small/1` instead"
+  def small_id(charset \\ CharSet.charset32()), do: small(charset)
+
+  @doc """
+  **_Deprecated_**: Use `medium/1` instead
+  """
+  @deprecated "Use `medium/1` instead"
+  def medium_id(charset \\ CharSet.charset32()), do: medium(charset)
+
+  @doc """
+  **_Deprecated_**: Use `large/1` instead
+  """
+  @deprecated "Use `large/1` instead"
+  def large_id(charset \\ CharSet.charset32()), do: large(charset)
+
+  @doc """
+  **_Deprecated_**: Use `session/1` instead
+  """
+  @deprecated "Use `session/1` instead"
+  def session_id(charset \\ CharSet.charset32()), do: session(charset)
+
+  @doc """
+  **_Deprecated_**: Use `bits/2` instead
+  """
+  @deprecated "Use `bits/2` instead"
+  def entropy_bits(total, risk), do: bits(total, risk)
+
+  @doc """
+  **_Deprecated_**: Use `random/2` instead
+  """
+  @deprecated "Use `random/2` instead"
+  def random_string(bits, charset \\ EntropyString.CharSet.charset32()), do: random(bits, charset)
+
+  @doc """
+  **_Deprecated_**: Use `random/3` instead
+  """
+  @deprecated "Use `random/3` instead"
+  def random_string(bits, charset, bytes), do: random(bits, charset, bytes)
+  
 end
