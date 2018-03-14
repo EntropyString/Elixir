@@ -22,7 +22,7 @@ Add `entropy_string` to `mix.exs` dependencies:
 
   ```elixir
   def deps do
-    [ {:entropy_string, "~> 1.0.0"} ]
+    [ {:entropy_string, "~> 1.2.0"} ]
   end
   ```
 
@@ -87,8 +87,6 @@ Generate a potential of _1 million_ random strings with _1 in a billion_ chance 
 `EntropyString` uses predefined `charset32` characters by default (reference [Character Sets](#CharacterSets)). To get a random hexadecimal string with the same entropy bits as above (see [Real Need](#RealNeed) for description of what entropy bits represents):
 
   ```elixir
-  ES-iex> import EntropyString
-  EntropyString
   ES-iex> bits(1.0e6, 1.0e9) |> random(:charset16)
   "acc071449951325cc5"
   ```
@@ -96,8 +94,6 @@ Generate a potential of _1 million_ random strings with _1 in a billion_ chance 
 Custom characters may be specified. Using uppercase hexadecimal characters:
 
   ```elixir
-  ES-iex> import EntropyString
-  EntropyString
   ES-iex> bits(1.0e6, 1.0e9) |> random("0123456789ABCDEF")
   "E75C7A50972E4994ED"
   ```
@@ -173,8 +169,8 @@ Further investigations can use the modules defined in `examples.exs`:
   ```elixir
   ES-iex> Hex.medium()
   "e092b3e3e13704681f"
-  ES-iex> DingoSky.id()
-  "sngksyygyydgsknsdidysnd"
+  ES-iex> DingoSky.medium()
+  "ynssinoiosgignoiokgsogk"
   ES-iex> WebServer.token()
   "mT2vN607xeJy8qzVElnFbCpCyYpuWrYRRKbtTsNI6RN"
   ```
@@ -240,8 +236,6 @@ How do you address this need using a library designed to generate strings of spe
 Let's use `EntropyString` to help this developer generate 5 hexadecimal IDs from a pool of a potentail 10,000 IDs with a 1 in a milllion chance of a repeat:
 
   ```elixir
-  ES-iex> import EntropyString
-  EntropyString
   ES-iex> bits = bits(10000, 1.0e6)
   45.50699332842307
   ES-iex> for x <- :lists.seq(1,5), do: random(bits, :charset16)
@@ -332,17 +326,13 @@ As another example, we saw in [Character Sets](#CharacterSets) the predefined he
   ES-iex> defmodule HexString, do: use EntropyString, charset: "0123456789ABCDEF"
   {:module, HexString,
      ...
-  ES-iex> HexString.random(:medium)
-  "C63CE7FE655C89B8BE"
+  ES-iex> HexString.random(192)
+  "2DE9D880A78BB73AFB5CFA802DAEB36BB54550A141B1EFF6"
   ```
-
-A `:medium` entropy string represents 1 in a billion chance of repeat for a strings.
 
 To facilitate [efficient](#Efficiency) generation of strings, `EntropyString` limits character set lengths to powers of 2. Attempting to use a character set of an invalid length returns an error.
 
   ```elixir
-  ES-iex> import EntropyString
-  EntropyString
   ES-iex> EntropyString.random(:medium, "123456789ABCDEF")
   {:error, "Invalid char count: must be one of 2,4,8,16,32,64"}
   ```
@@ -350,8 +340,6 @@ To facilitate [efficient](#Efficiency) generation of strings, `EntropyString` li
 Likewise, since calculating entropy requires specification of the probability of each symbol, `EntropyString` requires all characters in a set be unique. (This maximize entropy per string as well).
 
   ```elixir
-  ES-iex> import EntropyString
-  EntropyString
   ES-iex> EntropyString.random(:medium, "123456789ABCDEF1")
   {:error, "Chars not unique"}
   ```
@@ -431,9 +419,7 @@ Suppose we want 30 strings with no more than a 1 in a million chance of repeat w
 The __bytes__ provided can come from any source. However, an error is returned if the number of bytes is insufficient to generate the string as described in the [Efficiency](#Efficiency) section:
 
   ```elixir
-  ES-iex> bytes = <<0xfa, 0xc8, 0x96, 0x64>>
-  <<250, 200, 150, 100>>
-  ES-iex> EntropyString.random(:large, :charset32, bytes )
+  ES-iex> EntropyString.random(:large, :charset32, bytes)
   {:error, "Insufficient bytes: need 14 and got 4"}
   ```
 
@@ -510,14 +496,12 @@ The final line represents the number of entropy bits `N` as a function of the nu
   ```elixir
   ES-iex> defmodule SessionId do
   ...>   use EntropyString, charset: :charset16
-  ...>   def create, do: EntropyString.session()
+  ...>   def hex, do: EntropyString.session()
   ...>   end
   {:module, SessionId,
      ...
-  ES-iex> SessionId.create()
+  ES-iex> SessionId.hex()
   "eda5e254d24d71304f6a41fb10c3102d"
   ```
-
-
 
 [TOC](#TOC)

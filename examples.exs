@@ -58,7 +58,7 @@ IO.puts("  Medium ID: #{UpperHex.medium()}\n")
 defmodule DingoSky do
   use EntropyString, charset: "dingosky"
 
-  @bits entropy_bits(1.0e6, 1.0e9)
+  @bits bits(1.0e6, 1.0e9)
 
   def id, do: DingoSky.random(@bits)
 end

@@ -52,7 +52,7 @@ defmodule CharSetTest do
         :lists.seq(1, 65)
       ),
       fn n ->
-        {:error, _} = EntropyString.random_string(16, :binary.list_to_bin(:lists.seq(1, n)))
+        {:error, _} = EntropyString.random(16, :binary.list_to_bin(:lists.seq(1, n)))
       end
     )
   end

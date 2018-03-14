@@ -181,25 +181,6 @@ defmodule EntropyString do
       """
       def charset, do: @entropy_string_charset
 
-      @doc """
-      **_Deprecated_**: Use `small/1` instead
-      """
-      def small_id, do: small(@entropy_string_charset)
-
-      @doc """
-      **_Deprecated_**: Use `medium/1` instead
-      """
-      def medium_id, do: medium(@entropy_string_charset)
-
-      @doc """
-      **_Deprecated_**: Use `large/1` instead
-      """
-      def large_id, do: large(@entropy_string_charset)
-
-      @doc """
-      **_Deprecated_**: Use `session/1` instead
-      """
-      def session_id, do: session(@entropy_string_charset)
     end
   end
 
@@ -595,51 +576,4 @@ defmodule EntropyString do
   defp charset_from_atom(:charset32), do: CharSet.charset32()
   defp charset_from_atom(:charset64), do: CharSet.charset64()
 
-  ## ===============================================================================================
-  ##
-  ##  Deprecated functions
-  ##
-  ## ===============================================================================================
-  @doc """
-  **_Deprecated_**: Use `small/1` instead
-  """
-  @deprecated "Use `small/1` instead"
-  def small_id(charset \\ CharSet.charset32()), do: small(charset)
-
-  @doc """
-  **_Deprecated_**: Use `medium/1` instead
-  """
-  @deprecated "Use `medium/1` instead"
-  def medium_id(charset \\ CharSet.charset32()), do: medium(charset)
-
-  @doc """
-  **_Deprecated_**: Use `large/1` instead
-  """
-  @deprecated "Use `large/1` instead"
-  def large_id(charset \\ CharSet.charset32()), do: large(charset)
-
-  @doc """
-  **_Deprecated_**: Use `session/1` instead
-  """
-  @deprecated "Use `session/1` instead"
-  def session_id(charset \\ CharSet.charset32()), do: session(charset)
-
-  @doc """
-  **_Deprecated_**: Use `bits/2` instead
-  """
-  @deprecated "Use `bits/2` instead"
-  def entropy_bits(total, risk), do: bits(total, risk)
-
-  @doc """
-  **_Deprecated_**: Use `random/2` instead
-  """
-  @deprecated "Use `random/2` instead"
-  def random_string(bits, charset \\ EntropyString.CharSet.charset32()), do: random(bits, charset)
-
-  @doc """
-  **_Deprecated_**: Use `random/3` instead
-  """
-  @deprecated "Use `random/3` instead"
-  def random_string(bits, charset, bytes), do: random(bits, charset, bytes)
-  
 end

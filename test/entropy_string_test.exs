@@ -7,208 +7,218 @@ defmodule EntropyStringTest do
 
   import EntropyString
 
-  test "CharSet 64" do
-    charset = CharSet.charset64()
-    assert random_string(6, charset, <<0xDD>>) == "3"
-    assert random_string(12, charset, <<0x78, 0xFC>>) == "eP"
-    assert random_string(18, charset, <<0xC5, 0x6F, 0x21>>) == "xW8"
-    assert random_string(24, charset, <<0xC9, 0x68, 0xC7>>) == "yWjH"
-    assert random_string(30, charset, <<0xA5, 0x62, 0x20, 0x87>>) == "pWIgh"
-    assert random_string(36, charset, <<0x39, 0x51, 0xCA, 0xCC, 0x8B>>) == "OVHKzI"
-    assert random_string(42, charset, <<0x83, 0x89, 0x00, 0xC7, 0xF4, 0x02>>) == "g4kAx_Q"
-    assert random_string(48, charset, <<0x51, 0xBC, 0xA8, 0xC7, 0xC9, 0x17>>) == "Ubyox8kX"
-    assert random_string(54, charset, <<0xD2, 0xE3, 0xE9, 0xDA, 0x19, 0x97, 0x52>>) == "0uPp2hmXU"
+  test "CharSet.charset64()", do: with_64(CharSet.charset64())
+  test ":charset64", do: with_64(:charset64)
 
-    assert random_string(60, charset, <<0xD9, 0x39, 0xC1, 0xAF, 0x1E, 0x2E, 0x69, 0x48>>) ==
-             "2TnBrx4uaU"
+  defp with_64(charset) do
+    assert random(6, charset, <<0xDD>>) == "3"
+    assert random(12, charset, <<0x78, 0xFC>>) == "eP"
+    assert random(18, charset, <<0xC5, 0x6F, 0x21>>) == "xW8"
+    assert random(24, charset, <<0xC9, 0x68, 0xC7>>) == "yWjH"
+    assert random(30, charset, <<0xA5, 0x62, 0x20, 0x87>>) == "pWIgh"
+    assert random(36, charset, <<0x39, 0x51, 0xCA, 0xCC, 0x8B>>) == "OVHKzI"
+    assert random(42, charset, <<0x83, 0x89, 0x00, 0xC7, 0xF4, 0x02>>) == "g4kAx_Q"
+    assert random(48, charset, <<0x51, 0xBC, 0xA8, 0xC7, 0xC9, 0x17>>) == "Ubyox8kX"
+    assert random(54, charset, <<0xD2, 0xE3, 0xE9, 0xDA, 0x19, 0x97, 0x52>>) == "0uPp2hmXU"
+    assert random(60, charset, <<0xD9, 0x39, 0xC1, 0xAF, 0x1E, 0x2E, 0x69, 0x48>>) == "2TnBrx4uaU"
 
-    assert random_string(66, charset, <<0x78, 0x3F, 0xFD, 0x93, 0xD1, 0x06, 0x90, 0x4B, 0xD6>>) ==
+    assert random(66, charset, <<0x78, 0x3F, 0xFD, 0x93, 0xD1, 0x06, 0x90, 0x4B, 0xD6>>) ==
              "eD_9k9EGkEv"
 
-    assert random_string(72, charset, <<0x9D, 0x99, 0x4E, 0xA5, 0xD2, 0x3F, 0x8C, 0x86, 0x80>>) ==
+    assert random(72, charset, <<0x9D, 0x99, 0x4E, 0xA5, 0xD2, 0x3F, 0x8C, 0x86, 0x80>>) ==
              "nZlOpdI_jIaA"
   end
 
-  test "CharSet 32" do
-    charset = CharSet.charset32()
-    assert random_string(5, charset, <<0xDD>>) == "N"
-    assert random_string(10, charset, <<0x78, 0xFC>>) == "p6"
-    assert random_string(15, charset, <<0x78, 0xFC>>) == "p6R"
-    assert random_string(20, charset, <<0xC5, 0x6F, 0x21>>) == "JFHt"
-    assert random_string(25, charset, <<0xA5, 0x62, 0x20, 0x87>>) == "DFr43"
-    assert random_string(30, charset, <<0xA5, 0x62, 0x20, 0x87>>) == "DFr433"
-    assert random_string(35, charset, <<0x39, 0x51, 0xCA, 0xCC, 0x8B>>) == "b8dPFB7"
-    assert random_string(40, charset, <<0x39, 0x51, 0xCA, 0xCC, 0x8B>>) == "b8dPFB7h"
-    assert random_string(45, charset, <<0x83, 0x89, 0x00, 0xC7, 0xF4, 0x02>>) == "qn7q3rTD2"
+  test "CharSet.charset32()", do: with_32(CharSet.charset32())
+  test ":charset32", do: with_32(:charset32)
 
-    assert random_string(50, charset, <<0xD2, 0xE3, 0xE9, 0xDA, 0x19, 0x97, 0x52>>) ==
+  defp with_32(charset) do
+    assert random(5, charset, <<0xDD>>) == "N"
+    assert random(10, charset, <<0x78, 0xFC>>) == "p6"
+    assert random(15, charset, <<0x78, 0xFC>>) == "p6R"
+    assert random(20, charset, <<0xC5, 0x6F, 0x21>>) == "JFHt"
+    assert random(25, charset, <<0xA5, 0x62, 0x20, 0x87>>) == "DFr43"
+    assert random(30, charset, <<0xA5, 0x62, 0x20, 0x87>>) == "DFr433"
+    assert random(35, charset, <<0x39, 0x51, 0xCA, 0xCC, 0x8B>>) == "b8dPFB7"
+    assert random(40, charset, <<0x39, 0x51, 0xCA, 0xCC, 0x8B>>) == "b8dPFB7h"
+    assert random(45, charset, <<0x83, 0x89, 0x00, 0xC7, 0xF4, 0x02>>) == "qn7q3rTD2"
+
+    assert random(50, charset, <<0xD2, 0xE3, 0xE9, 0xDA, 0x19, 0x97, 0x52>>) ==
              "MhrRBGqLtQ"
 
-    assert random_string(55, charset, <<0xD2, 0xE3, 0xE9, 0xDA, 0x19, 0x97, 0x52>>) ==
+    assert random(55, charset, <<0xD2, 0xE3, 0xE9, 0xDA, 0x19, 0x97, 0x52>>) ==
              "MhrRBGqLtQf"
   end
 
-  test "CharSet 16" do
-    charset = CharSet.charset16()
-    assert random_string(4, charset, <<0x9D>>) == "9"
-    assert random_string(8, charset, <<0xAE>>) == "ae"
-    assert random_string(12, charset, <<0x01, 0xF2>>) == "01f"
-    assert random_string(16, charset, <<0xC7, 0xC9>>) == "c7c9"
-    assert random_string(20, charset, <<0xC7, 0xC9, 0x00>>) == "c7c90"
+  test "CharSet.charset16()", do: with_16(CharSet.charset16())
+  test ":charset16", do: with_16(:charset16)
+
+  defp with_16(charset) do
+    assert random(4, charset, <<0x9D>>) == "9"
+    assert random(8, charset, <<0xAE>>) == "ae"
+    assert random(12, charset, <<0x01, 0xF2>>) == "01f"
+    assert random(16, charset, <<0xC7, 0xC9>>) == "c7c9"
+    assert random(20, charset, <<0xC7, 0xC9, 0x00>>) == "c7c90"
   end
 
-  test "CharSet 8" do
-    charset = CharSet.charset8()
-    assert random_string(3, charset, <<0x5A>>) == "2"
-    assert random_string(6, charset, <<0x5A>>) == "26"
-    assert random_string(9, charset, <<0x21, 0xA4>>) == "103"
-    assert random_string(12, charset, <<0x21, 0xA4>>) == "1032"
-    assert random_string(15, charset, <<0xDA, 0x19>>) == "66414"
-    assert random_string(18, charset, <<0xFD, 0x93, 0xD1>>) == "773117"
-    assert random_string(21, charset, <<0xFD, 0x93, 0xD1>>) == "7731172"
-    assert random_string(24, charset, <<0xFD, 0x93, 0xD1>>) == "77311721"
-    assert random_string(27, charset, <<0xC7, 0xC9, 0x07, 0xC9>>) == "617444076"
-    assert random_string(30, charset, <<0xC7, 0xC9, 0x07, 0xC9>>) == "6174440762"
+  test "CharSet.charset8()", do: with_8(CharSet.charset8())
+  test ":charset8", do: with_8(:charset8)
+
+  defp with_8(charset) do
+    assert random(3, charset, <<0x5A>>) == "2"
+    assert random(6, charset, <<0x5A>>) == "26"
+    assert random(9, charset, <<0x21, 0xA4>>) == "103"
+    assert random(12, charset, <<0x21, 0xA4>>) == "1032"
+    assert random(15, charset, <<0xDA, 0x19>>) == "66414"
+    assert random(18, charset, <<0xFD, 0x93, 0xD1>>) == "773117"
+    assert random(21, charset, <<0xFD, 0x93, 0xD1>>) == "7731172"
+    assert random(24, charset, <<0xFD, 0x93, 0xD1>>) == "77311721"
+    assert random(27, charset, <<0xC7, 0xC9, 0x07, 0xC9>>) == "617444076"
+    assert random(30, charset, <<0xC7, 0xC9, 0x07, 0xC9>>) == "6174440762"
   end
 
-  test "CharSet 4" do
-    charset = CharSet.charset4()
-    assert random_string(2, charset, <<0x5A>>) == "T"
-    assert random_string(4, charset, <<0x5A>>) == "TT"
-    assert random_string(6, charset, <<0x93>>) == "CTA"
-    assert random_string(8, charset, <<0x93>>) == "CTAG"
-    assert random_string(10, charset, <<0x20, 0xF1>>) == "ACAAG"
-    assert random_string(12, charset, <<0x20, 0xF1>>) == "ACAAGG"
-    assert random_string(14, charset, <<0x20, 0xF1>>) == "ACAAGGA"
-    assert random_string(16, charset, <<0x20, 0xF1>>) == "ACAAGGAT"
+  test "CharSet.charset4()", do: with_4(CharSet.charset4())
+  test ":charset4", do: with_4(:charset4)
+
+  defp with_4(charset) do
+    assert random(2, charset, <<0x5A>>) == "T"
+    assert random(4, charset, <<0x5A>>) == "TT"
+    assert random(6, charset, <<0x93>>) == "CTA"
+    assert random(8, charset, <<0x93>>) == "CTAG"
+    assert random(10, charset, <<0x20, 0xF1>>) == "ACAAG"
+    assert random(12, charset, <<0x20, 0xF1>>) == "ACAAGG"
+    assert random(14, charset, <<0x20, 0xF1>>) == "ACAAGGA"
+    assert random(16, charset, <<0x20, 0xF1>>) == "ACAAGGAT"
   end
 
-  test "CharSet 2" do
-    charset = CharSet.charset2()
-    assert random_string(1, charset, <<0x27>>) == "0"
-    assert random_string(2, charset, <<0x27>>) == "00"
-    assert random_string(3, charset, <<0x27>>) == "001"
-    assert random_string(4, charset, <<0x27>>) == "0010"
-    assert random_string(5, charset, <<0x27>>) == "00100"
-    assert random_string(6, charset, <<0x27>>) == "001001"
-    assert random_string(7, charset, <<0x27>>) == "0010011"
-    assert random_string(8, charset, <<0x27>>) == "00100111"
-    assert random_string(9, charset, <<0xE3, 0xE9>>) == "111000111"
-    assert random_string(16, charset, <<0xE3, 0xE9>>) == "1110001111101001"
+  test "CharSet.charset2()", do: with_2(CharSet.charset2())
+  test ":charset2", do: with_2(:charset2)
+
+  defp with_2(charset) do
+    assert random(1, charset, <<0x27>>) == "0"
+    assert random(2, charset, <<0x27>>) == "00"
+    assert random(3, charset, <<0x27>>) == "001"
+    assert random(4, charset, <<0x27>>) == "0010"
+    assert random(5, charset, <<0x27>>) == "00100"
+    assert random(6, charset, <<0x27>>) == "001001"
+    assert random(7, charset, <<0x27>>) == "0010011"
+    assert random(8, charset, <<0x27>>) == "00100111"
+    assert random(9, charset, <<0xE3, 0xE9>>) == "111000111"
+    assert random(16, charset, <<0xE3, 0xE9>>) == "1110001111101001"
   end
 
-  test "small ID" do
-    assert byte_size(small_id()) == 6
+  test "small" do
+    assert byte_size(small()) == 6
 
-    assert byte_size(small_id(CharSet.charset64())) == 5
-    assert byte_size(small_id(CharSet.charset32())) == 6
-    assert byte_size(small_id(CharSet.charset16())) == 8
-    assert byte_size(small_id(CharSet.charset8())) == 10
-    assert byte_size(small_id(CharSet.charset4())) == 15
-    assert byte_size(small_id(CharSet.charset2())) == 29
+    assert byte_size(small(:charset64)) == 5
+    assert byte_size(small(:charset32)) == 6
+    assert byte_size(small(:charset16)) == 8
+    assert byte_size(small(:charset8)) == 10
+    assert byte_size(small(:charset4)) == 15
+    assert byte_size(small(:charset2)) == 29
   end
 
-  test "medium ID" do
-    assert byte_size(medium_id()) == 14
+  test "medium" do
+    assert byte_size(medium()) == 14
 
-    assert byte_size(medium_id(CharSet.charset64())) == 12
-    assert byte_size(medium_id(CharSet.charset32())) == 14
-    assert byte_size(medium_id(CharSet.charset16())) == 18
-    assert byte_size(medium_id(CharSet.charset8())) == 23
-    assert byte_size(medium_id(CharSet.charset4())) == 35
-    assert byte_size(medium_id(CharSet.charset2())) == 69
+    assert byte_size(medium(:charset64)) == 12
+    assert byte_size(medium(:charset32)) == 14
+    assert byte_size(medium(:charset16)) == 18
+    assert byte_size(medium(:charset8)) == 23
+    assert byte_size(medium(:charset4)) == 35
+    assert byte_size(medium(:charset2)) == 69
   end
 
-  test "large ID" do
-    assert byte_size(large_id()) == 20
+  test "large" do
+    assert byte_size(large()) == 20
 
-    assert byte_size(large_id(CharSet.charset64())) == 17
-    assert byte_size(large_id(CharSet.charset32())) == 20
-    assert byte_size(large_id(CharSet.charset16())) == 25
-    assert byte_size(large_id(CharSet.charset8())) == 33
-    assert byte_size(large_id(CharSet.charset4())) == 50
-    assert byte_size(large_id(CharSet.charset2())) == 99
+    assert byte_size(large(:charset64)) == 17
+    assert byte_size(large(:charset32)) == 20
+    assert byte_size(large(:charset16)) == 25
+    assert byte_size(large(:charset8)) == 33
+    assert byte_size(large(:charset4)) == 50
+    assert byte_size(large(:charset2)) == 99
   end
 
-  test "session ID" do
-    assert byte_size(session_id()) == 26
+  test "session" do
+    assert byte_size(session()) == 26
 
-    assert byte_size(session_id(CharSet.charset64())) == 22
-    assert byte_size(session_id(CharSet.charset32())) == 26
-    assert byte_size(session_id(CharSet.charset16())) == 32
-    assert byte_size(session_id(CharSet.charset8())) == 43
-    assert byte_size(session_id(CharSet.charset4())) == 64
-    assert byte_size(session_id(CharSet.charset2())) == 128
+    assert byte_size(session(:charset64)) == 22
+    assert byte_size(session(:charset32)) == 26
+    assert byte_size(session(:charset16)) == 32
+    assert byte_size(session(:charset8)) == 43
+    assert byte_size(session(:charset4)) == 64
+    assert byte_size(session(:charset2)) == 128
   end
 
   test "token" do
     assert byte_size(token()) == 43
 
-    assert byte_size(token(CharSet.charset64())) == 43
-    assert byte_size(token(CharSet.charset32())) == 52
-    assert byte_size(token(CharSet.charset16())) == 64
-    assert byte_size(token(CharSet.charset8())) == 86
-    assert byte_size(token(CharSet.charset4())) == 128
-    assert byte_size(token(CharSet.charset2())) == 256
+    assert byte_size(token(:charset64)) == 43
+    assert byte_size(token(:charset32)) == 52
+    assert byte_size(token(:charset16)) == 64
+    assert byte_size(token(:charset8)) == 86
+    assert byte_size(token(:charset4)) == 128
+    assert byte_size(token(:charset2)) == 256
   end
 
   test "invalid byte count" do
-    {:error, _} = random_string(7, CharSet.charset64(), <<1>>)
-    {:error, _} = random_string(13, CharSet.charset64(), <<1, 2>>)
-    {:error, _} = random_string(25, CharSet.charset64(), <<1, 2, 3>>)
-    {:error, _} = random_string(31, CharSet.charset64(), <<1, 2, 3, 4>>)
+    {:error, _} = random(7, :charset64, <<1>>)
+    {:error, _} = random(13, :charset64, <<1, 2>>)
+    {:error, _} = random(25, :charset64, <<1, 2, 3>>)
+    {:error, _} = random(31, :charset64, <<1, 2, 3, 4>>)
 
-    {:error, _} = random_string(6, CharSet.charset32(), <<1>>)
-    {:error, _} = random_string(16, CharSet.charset32(), <<1, 2>>)
-    {:error, _} = random_string(21, CharSet.charset32(), <<1, 2, 3>>)
-    {:error, _} = random_string(31, CharSet.charset32(), <<1, 2, 3, 4>>)
-    {:error, _} = random_string(32, CharSet.charset32(), <<1, 2, 3, 4>>)
-    {:error, _} = random_string(41, CharSet.charset32(), <<1, 2, 3, 4, 5>>)
-    {:error, _} = random_string(46, CharSet.charset32(), <<1, 2, 3, 4, 5, 6>>)
+    {:error, _} = random(6, :charset32, <<1>>)
+    {:error, _} = random(16, :charset32, <<1, 2>>)
+    {:error, _} = random(21, :charset32, <<1, 2, 3>>)
+    {:error, _} = random(31, :charset32, <<1, 2, 3, 4>>)
+    {:error, _} = random(32, :charset32, <<1, 2, 3, 4>>)
+    {:error, _} = random(41, :charset32, <<1, 2, 3, 4, 5>>)
+    {:error, _} = random(46, :charset32, <<1, 2, 3, 4, 5, 6>>)
 
-    {:error, _} = random_string(9, CharSet.charset16(), <<1>>)
-    {:error, _} = random_string(17, CharSet.charset16(), <<1, 2>>)
+    {:error, _} = random(9, :charset16, <<1>>)
+    {:error, _} = random(17, :charset16, <<1, 2>>)
 
-    {:error, _} = random_string(7, CharSet.charset8(), <<1>>)
-    {:error, _} = random_string(16, CharSet.charset8(), <<1, 2>>)
-    {:error, _} = random_string(25, CharSet.charset8(), <<1, 2, 3>>)
-    {:error, _} = random_string(31, CharSet.charset8(), <<1, 2, 3, 4>>)
+    {:error, _} = random(7, :charset8, <<1>>)
+    {:error, _} = random(16, :charset8, <<1, 2>>)
+    {:error, _} = random(25, :charset8, <<1, 2, 3>>)
+    {:error, _} = random(31, :charset8, <<1, 2, 3, 4>>)
 
-    {:error, _} = random_string(9, CharSet.charset4(), <<1>>)
-    {:error, _} = random_string(17, CharSet.charset4(), <<1, 2>>)
+    {:error, _} = random(9, :charset4, <<1>>)
+    {:error, _} = random(17, :charset4, <<1, 2>>)
 
-    {:error, _} = random_string(9, CharSet.charset2(), <<1>>)
-    {:error, _} = random_string(17, CharSet.charset2(), <<1, 2>>)
+    {:error, _} = random(9, :charset2, <<1>>)
+    {:error, _} = random(17, :charset2, <<1, 2>>)
   end
 
   test "custom characters" do
     charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9876543210_-"
     bytes = <<0x9D, 0x99, 0x4E, 0xA5, 0xD2, 0x3F, 0x8C, 0x86, 0x80>>
-    assert random_string(72, charset, bytes) == "NzLoPDi-JiAa"
+    assert random(72, charset, bytes) == "NzLoPDi-JiAa"
 
     charset = "2346789BDFGHJMNPQRTbdfghjlmnpqrt"
     bytes = <<0xD2, 0xE3, 0xE9, 0xDA, 0x19, 0x97, 0x52>>
-    assert random_string(55, charset, bytes) == "mHRrbgQlTqF"
+    assert random(55, charset, bytes) == "mHRrbgQlTqF"
 
     charset = "0123456789ABCDEF"
     bytes = <<0xC7, 0xC9, 0x00>>
-    assert random_string(20, charset, bytes) == "C7C90"
+    assert random(20, charset, bytes) == "C7C90"
 
     charset = "abcdefgh"
     bytes = <<0xC7, 0xC9, 0x07, 0xC9>>
-    assert random_string(30, charset, bytes) == "gbheeeahgc"
+    assert random(30, charset, bytes) == "gbheeeahgc"
 
     charset = "atcg"
     bytes = <<0x20, 0xF1>>
-    assert random_string(16, charset, bytes) == "acaaggat"
+    assert random(16, charset, bytes) == "acaaggat"
 
     charset = "HT"
     bytes = <<0xE3, 0xE9>>
-    assert random_string(16, charset, bytes) == "TTTHHHTTTTTHTHHT"
+    assert random(16, charset, bytes) == "TTTHHHTTTTTHTHHT"
   end
 
   test "invalid charset" do
-    {:error, _} = random_string(10, <<"H20">>)
-    {:error, _} = random_string(10, <<"H202">>)
+    {:error, _} = random(10, <<"H20">>)
+    {:error, _} = random(10, <<"H202">>)
   end
 end
