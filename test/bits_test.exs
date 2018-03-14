@@ -10,7 +10,7 @@ defmodule BitsTest do
     assert bits(0, -1) == 0
     assert bits(-1, 0) == 0
   end
-  
+
   test "bits for integer total and risk" do
     assert round(bits(10, 1000)) == 15
     assert round(bits(10, 10000)) == 19

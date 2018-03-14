@@ -13,8 +13,7 @@ defmodule EntropyString.Mixfile do
   end
 
   defp deps do
-    [{:earmark, "~> 1.2", only: :dev},
-     {:ex_doc, "~> 0.18", only: :dev}]
+    [{:earmark, "~> 1.2", only: :dev}, {:ex_doc, "~> 0.18", only: :dev}]
   end
 
   defp description do

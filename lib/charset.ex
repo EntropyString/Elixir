@@ -194,7 +194,7 @@ defmodule EntropyString.CharSet do
   def bytes_needed(bits, charset) when is_atom(charset) do
     bytes_needed(bits, charset_from_atom(charset))
   end
-  
+
   def bytes_needed(bits, charset) do
     bitsPerChar = bits_per_char(charset)
     charCount = round(Float.ceil(bits / bitsPerChar))
@@ -266,7 +266,6 @@ defmodule EntropyString.CharSet do
 
   defp unique(error, _), do: error
 
-
   ## These 2 functions are repeated in entropy_string.ex. I don't want these function to be
   ## public. CxTBD Is there a way to DRY these functions and not be public?
 
@@ -288,5 +287,4 @@ defmodule EntropyString.CharSet do
   defp charset_from_atom(:charset16), do: @charset16
   defp charset_from_atom(:charset32), do: @charset32
   defp charset_from_atom(:charset64), do: @charset64
-  
 end
