@@ -43,6 +43,17 @@ defmodule EntropyString do
       import EntropyString
       import CharSet
 
+      bits = case unquote(opts)[:bits] do
+        nil ->
+          128
+
+        bitLen ->
+          bitLen
+
+        end
+
+      @entropy_string_bits bits
+
       charset =
         case unquote(opts)[:charset] do
           nil ->
@@ -85,6 +96,11 @@ defmodule EntropyString do
   @doc false
   defmacro __before_compile__(_env) do
     quote do
+      @doc """
+      Default entropy bits for random strings
+      """
+      def bits, do: @entropy_string_bits
+
       @doc """
       Module **_EntropyString.CharSet_**
       """
@@ -144,6 +160,7 @@ defmodule EntropyString do
         - **_bits_** - entropy bits for string
           - non-negative integer
           - predefined atom
+          - Defaults to module **_bits_**
 
       Returns string of at least entropy **_bits_** using module characters; or
 
@@ -168,7 +185,19 @@ defmodule EntropyString do
           "CeElDdo7HnNDuiWwlFPPq0"
 
       """
-      def random(bits), do: random(bits, @entropy_string_charset)
+      def random(bits \\ @entropy_string_bits), do: random(bits, @entropy_string_charset)
+
+      @doc """
+      Random string of module entropy **_bits_** using module **_charset_**
+
+      ## Example
+
+      Define a module for 10 million strings with a 1 in a trillion chance of a repeat
+
+        defmodule
+
+      """
+      def string(), do: random(@entropy_string_bits, @entropy_string_charset)
 
     end
   end
