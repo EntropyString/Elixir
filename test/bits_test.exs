@@ -98,4 +98,14 @@ defmodule BitsTest do
     assert bits(100, -1) == NaN
     assert bits(-1, -1) == NaN
   end
+
+  test "module entropy total/risk" do
+    defmodule(TotalRiskId, do: use(EntropyString, total: 10_000_000, risk: 10.0e12))
+    assert round(TotalRiskId.bits()) == 89
+  end
+
+  test "module entropy bits" do
+    defmodule(BitsId, do: use(EntropyString, bits: 96))
+    assert BitsId.bits() == 96
+  end
 end

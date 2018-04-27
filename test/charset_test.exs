@@ -15,6 +15,11 @@ defmodule CharSetTest do
   ]
   @bits_per_byte 8
 
+  test "module charset" do
+    defmodule(HexChars, do: use(EntropyString, charset: CharSet.charset16))
+    assert CharSet.charset16() === HexChars.charset
+  end
+
   test "bits per char" do
     testCharSet = fn charset ->
       actual = CharSet.bits_per_char(charset)

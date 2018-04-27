@@ -7,6 +7,19 @@ defmodule EntropyStringTest do
 
   import EntropyString
 
+  test "Module total and risk entropy bits" do
+    defmodule(TotalRisk, do: use(EntropyString, total: 1.0e9, risk: 1.0e12))
+    assert round(TotalRisk.bits()) == 99
+    assert String.length(TotalRisk.string()) == 20
+    assert String.length(TotalRisk.random()) == 20
+  end
+
+  test "Module entropy bits" do
+    defmodule(Bits, do: use(EntropyString, bits: 122))
+    assert round(Bits.bits()) == 122
+    assert String.length(Bits.string()) == String.length(Bits.random())
+  end
+
   test "CharSet.charset64()", do: with_64(CharSet.charset64())
   test ":charset64", do: with_64(:charset64)
 
