@@ -43,14 +43,20 @@ defmodule EntropyString do
       import EntropyString
       import CharSet
 
-      bits = case unquote(opts)[:bits] do
-        nil ->
-          128
+      bitLen = unquote(opts)[:bits]
+      total = unquote(opts)[:total]
+      risk  = unquote(opts)[:risk]
 
-        bitLen ->
+      bits = cond do
+        is_number(bitLen) ->
           bitLen
 
-        end
+        is_number(total) and is_number(risk) ->
+          EntropyString.bits(total, risk)
+
+        true ->
+          128
+      end
 
       @entropy_string_bits bits
 
@@ -188,17 +194,33 @@ defmodule EntropyString do
       def random(bits \\ @entropy_string_bits), do: random(bits, @entropy_string_charset)
 
       @doc """
-      Random string of module entropy **_bits_** using module **_charset_**
+      Random string of module entropy **_bits_** and **_charset_**
 
       ## Example
 
-      Define a module for 10 million strings with a 1 in a trillion chance of a repeat
+      Define a module for 10 billion strings with a 1 in a decillion chance of a repeat
 
-        defmodule
+          defmodule Rare, do: use EntropyString, total: 1.0e10, risk: 1.0e33
+
+          Rare.string()
+          "H2Mp8MPT7F3Pp2bmHm"
+
+      Define a module for strings with 122 bits of entropy
+
+          defmodule MyId, do: use EntropyString, bits: 122, charset: charset64
+
+          MyId.string()
+          "aj2_kMH64P2QDRBlOkz7Z"
 
       """
+      @since "1.3"
       def string(), do: random(@entropy_string_bits, @entropy_string_charset)
 
+      @doc """
+      Module characters
+      """
+      @since "1.3"
+      def chars(), do: @entropy_string_charset
     end
   end
 
@@ -410,7 +432,7 @@ defmodule EntropyString do
       "txSdE3qBK2etQtLyCFNHGD"
 
   """
-  def random(bits, charset \\ :charset32)
+  def random(bits \\ 128, charset \\ :charset32)
 
   ## -----------------------------------------------------------------------------------------------
   ##  Invalid bits
