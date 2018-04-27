@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2017 Knoxen
+# Copyright (c) 2017-2018 Knoxen
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -95,8 +95,8 @@ defmodule EntropyString.CharSet do
   @doc """
   Strings that don't look like English words and are easy to parse visually
 
-      "2346789bdfghjmnpqrtBDFGHJLMNPQRT" 
-   
+      "2346789bdfghjmnpqrtBDFGHJLMNPQRT"
+
     - remove all upper and lower case vowels (including y)
     - remove all numbers that look like letters
     - remove all letters that look like numbers

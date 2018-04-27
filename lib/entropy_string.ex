@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2017 Knoxen
+# Copyright (c) 2017-2018 Knoxen
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 defmodule EntropyString do
-  alias EntropyString.CharSet, as: CharSet
+  alias EntropyString.CharSet
 
   @moduledoc """
   Efficiently generate cryptographically strong random strings of specified entropy from various
@@ -41,7 +41,7 @@ defmodule EntropyString do
   defmacro __using__(opts) do
     quote do
       import EntropyString
-      import EntropyString.CharSet
+      import CharSet
 
       charset =
         case unquote(opts)[:charset] do
@@ -89,7 +89,7 @@ defmodule EntropyString do
       Module **_EntropyString.CharSet_**
       """
       def charset, do: @entropy_string_charset
-      
+
       @doc """
       Random string using module **_charset_** with a 1 in a million chance of repeat in
       30 strings.
@@ -349,7 +349,7 @@ defmodule EntropyString do
        - non-negative integer
        - predefined atom
     - **_charset_** - CharSet to use
-       - `EntropyString.CharSet` 
+       - `EntropyString.CharSet`
        - predefined atom
        - Valid `String` representing the characters for the `EntropyString.CharSet`
 
@@ -410,7 +410,7 @@ defmodule EntropyString do
        - non-negative integer
        - predefined atom
     - **_charset_** - CharSet to use
-       - `EntropyString.CharSet` 
+       - `EntropyString.CharSet`
        - predefined atom
        - Valid `String` representing the characters for the `EntropyString.CharSet`
     - **_bytes_** - Bytes to use
