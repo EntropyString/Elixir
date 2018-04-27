@@ -179,23 +179,23 @@ Further investigations can use the modules defined in `examples.exs`:
 
 ### <a name="Overview"></a>Overview
 
-`EntropyString` provides easy creation of randomly generated strings of specific entropy using various character sets. Such strings are needed as unique identifiers when generating, for example, random IDs and you don't want the overkill of a GUID.
+`EntropyString` provides easy creation of randomly generated strings of specific entropy using various character sets. Such strings are needed as unique identifiers when generating, for example, random IDs and you don't want the overkill of a UUID.
 
-A key concern when generating such strings is that they be unique. Guaranteed uniqueness, however,, requires either deterministic generation (e.g., a counter) that is not random, or that each newly created random string be compared against all existing strings. When ramdoness is required, the overhead of storing and comparing strings is often too onerous and a different tack is chosen.
+A key concern when generating such strings is that they be unique. Guaranteed uniqueness, however, requires either deterministic generation (e.g., a counter) that is not random, or that each newly created random string be compared against all existing strings. When randomness is required, the overhead of storing and comparing strings is often too onerous and a different tack is chosen.
 
-A common strategy is to replace the *guarantee of uniqueness* with a weaker but often sufficient *probabilistic uniqueness*. Specifically, rather than being absolutely sure of uniqueness, we settle for a statement such as *"there is less than a 1 in a billion chance that two of my strings are the same"*. This strategy requires much less overhead, but does require we have some manner of qualifying what we mean by *"there is less than a 1 in a billion chance that 1 million strings of this form will have a repeat"*.
+A common strategy is to replace the **_guarantee of uniqueness_** with a weaker but often sufficient one of **_probabilistic uniqueness_**. Specifically, rather than being absolutely sure of uniqueness, we settle for a statement such as *"there is less than a 1 in a billion chance that two of my strings are the same"*. We use an implicit version of this very strategy every time we use a hash set, where the keys are formed from taking the hash of some value. We *assume* there will be no hash collision using our values, but we **do not** have any true guarantee of uniqueness per se.
 
-Understanding probabilistic uniqueness of random strings requires an understanding of [*entropy*](https://en.wikipedia.org/wiki/Entropy_(information_theory)) and of estimating the probability of a [*collision*](https://en.wikipedia.org/wiki/Birthday_problem#Cast_as_a_collision_problem) (i.e., the probability that two strings in a set of randomly generated strings might be the same). The blog posting [Hash Collision Probabilities](http://preshing.com/20110504/hash-collision-probabilities/) provides an excellent overview of deriving an expression for calculating the probability of a collision in some number of hashes using a perfect hash with an N-bit output. The [Entropy Bits](#EntropyBits) section below discribes how `EntropyString` takes this idea a step further to address a common need in generating unique identifiers.
+Fortunately, a probabilistic uniqueness strategy requires much less overhead than guaranteed uniqueness. But it does require we have some manner of qualifying what we mean by *"there is less than a 1 in a billion chance that 1 million strings of this form will have a repeat"*.
 
-We'll begin investigating `EntropyString` and this common need by considering our [Real Need](#RealNeed) when generating random strings.
+Understanding probabilistic uniqueness of random strings requires an understanding of [*entropy*](https://en.wikipedia.org/wiki/Entropy_(information_theory)) and of estimating the probability of a [*collision*](https://en.wikipedia.org/wiki/Birthday_problem#Cast_as_a_collision_problem) (i.e., the probability that two strings in a set of randomly generated strings might be the same). The blog post [Hash Collision Probabilities](http://preshing.com/20110504/hash-collision-probabilities/) provides an excellent overview of deriving an expression for calculating the probability of a collision in some number of hashes using a perfect hash with an N-bit output. This is sufficient for understanding the probability of collision given a hash with a **fixed** output of N-bits, but does not provide an answer to qualifying what we mean by *"there is less than a 1 in a billion chance that 1 million strings of this form will have a repeat"*. The [Entropy Bits](#EntropyBits) section below describes how `EntropyString` provides this qualifying measure.
+
+We'll begin investigating `EntropyString` by considering the [Real Need](#RealNeed) when generating random strings.
 
 [TOC](#TOC)
 
 ### <a name="RealNeed"></a>Real Need
 
-Let's start by reflecting on a common statement of need for developers, who might say:
-
-*I need random strings 16 characters long.*
+Let's start by reflecting on the common statement: *I need random strings 16 characters long.*
 
 Okay. There are libraries available that address that exact need. But first, there are some questions that arise from the need as stated, such as:
 
@@ -211,27 +211,29 @@ As for question 2, the developer might respond:
 
 *I need 10,000 of these things*.
 
-Ah, now we're getting somewhere. The answer to question 3 might lead to the further qualification:
+Ah, now we're getting somewhere. The answer to question 3 might lead to a further qualification:
 
 *I need to generate 10,000 random, unique IDs*.
 
-And the cat's out of the bag. We're getting at the real need, and it's not the same as the original statement. The developer needs *uniqueness* across some potential number of strings. The length of the string is a by-product of the uniqueness, not the goal, and should not be the primary specification for the random string.
+And the cat's out of the bag. We're getting at the real need, and it's not the same as the original statement. The developer needs *uniqueness* across a total of some number of strings. The length of the string is a by-product of the uniqueness, not the goal, and should not be the primary specification for the random string.
 
-As noted in the [Overview](#Overview), guaranteeing uniqueness is difficult, so we'll replace that declaration with one of *probabilistic uniqueness* by asking:
+As noted in the [Overview](#Overview), guaranteeing uniqueness is difficult, so we'll replace that declaration with one of *probabilistic uniqueness* by asking a fourth question:
 
-  - What risk of a repeat are you willing to accept?
+<ol start=4>
+  <li>What risk of a repeat are you willing to accept?</li>
+</ol>
 
-Probabilistic uniqueness contains risk. That's the price we pay for giving up on the stronger declaration of strict uniqueness. But the developer can quantify an appropriate risk for a particular scenario with a statement like:
+Probabilistic uniqueness contains risk. That's the price we pay for giving up on the stronger declaration of garuanteed uniqueness. But the developer can quantify an appropriate risk for a particular scenario with a statement like:
 
 *I guess I can live with a 1 in a million chance of a repeat*.
 
-So now we've gotten to the developer's real need:
+So now we've finally gotten to the developer's real need:
 
 *I need 10,000 random hexadecimal IDs with less than 1 in a million chance of any repeats*.
 
 Not only is this statement more specific, there is no mention of string length. The developer needs probabilistic uniqueness, and strings are to be used to capture randomness for this purpose. As such, the length of the string is simply a by-product of the encoding used to represent the required uniqueness as a string.
 
-How do you address this need using a library designed to generate strings of specified length?  Well, you don't directly, because that library was designed to answer the originally stated need, not the real need we've uncovered. We need a library that deals with probabilistic uniqueness of a total number of some strings. And that's exactly what `EntropyString` does.
+How do you address this need using a library designed to generate strings of specified length?  Well, you don't, because that library was designed to answer the originally stated need, not the real need we've uncovered. We need a library that deals with probabilistic uniqueness of a total number of some strings. And that's exactly what `EntropyString` does.
 
 Let's use `EntropyString` to help this developer generate 5 hexadecimal IDs from a pool of a potentail 10,000 IDs with a 1 in a milllion chance of a repeat:
 
