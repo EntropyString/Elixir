@@ -204,7 +204,7 @@ As noted in the [Overview](#Overview), guaranteeing uniqueness is difficult, so 
   <li>What risk of a repeat are you willing to accept?</li>
 </ol>
 
-Probabilistic uniqueness contains risk. That's the price we pay for giving up on the stronger declaration of garuanteed uniqueness. But the developer can quantify an appropriate risk for a particular scenario with a statement like:
+Probabilistic uniqueness contains risk. That's the price we pay for giving up on the stronger declaration of guaranteed uniqueness. But the developer can quantify an appropriate risk for a particular scenario with a statement like:
 
 *I guess I can live with a 1 in a million chance of a repeat*.
 
