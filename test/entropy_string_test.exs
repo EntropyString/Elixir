@@ -202,7 +202,7 @@ defmodule EntropyString.Test do
     {:error, _} = random(17, :charset2, <<1, 2>>)
   end
 
-  test "custom characters" do
+  test "custom characters safe64" do
     charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9876543210_-"
     bytes = <<0x9D, 0x99, 0x4E, 0xA5, 0xD2, 0x3F, 0x8C, 0x86, 0x80>>
     assert random(72, charset, bytes) == "NzLoPDi-JiAa"
@@ -228,8 +228,23 @@ defmodule EntropyString.Test do
     assert random(16, charset, bytes) == "TTTHHHTTTTTHTHHT"
   end
 
-  test "invalid charset" do
+  test "custom characters dingosky" do
+    chars = "dingosky"
+    defmodule(DingoSky, do: use(EntropyString, bits: 48, charset: chars))
+
+    DingoSky.random()
+    |> String.graphemes()
+    |> Enum.each(fn char -> assert String.contains?(chars, char) end)
+  end
+
+  test "invalid charset for random" do
     {:error, _} = random(10, <<"H20">>)
     {:error, _} = random(10, <<"H202">>)
+  end
+
+  test "invalid charset for module" do
+    assert_raise EntropyString.Error, fn ->
+      defmodule(Vowel, do: use(EntropyString, charset: "aeiou"))
+    end
   end
 end
