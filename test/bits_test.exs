@@ -1,4 +1,4 @@
-defmodule BitsTest do
+defmodule EntropypString.Bits.Test do
   use ExUnit.Case, async: true
 
   import EntropyString, only: [bits: 2]
