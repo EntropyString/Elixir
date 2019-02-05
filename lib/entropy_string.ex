@@ -364,7 +364,6 @@ defmodule EntropyString do
       EntropyString.session(:charset64)
       "VzhprMROlM6Iy2Pk1IRCqR"
   """
-  @since "1.1.0"
   def session(charset \\ :charset32)
 
   def session(charset) when is_atom(charset) do
