@@ -20,6 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+defmodule EntropyString.Error do
+  @moduledoc """
+  Errors raised when defining a EntropyString module with invalid options
+  """
+  defexception message: "EntropyString error"
+end
+
 defmodule EntropyString do
   alias EntropyString.CharSet
 
@@ -45,18 +52,19 @@ defmodule EntropyString do
 
       bitLen = unquote(opts)[:bits]
       total = unquote(opts)[:total]
-      risk  = unquote(opts)[:risk]
+      risk = unquote(opts)[:risk]
 
-      bits = cond do
-        is_number(bitLen) ->
-          bitLen
+      bits =
+        cond do
+          is_number(bitLen) ->
+            bitLen
 
-        is_number(total) and is_number(risk) ->
-          EntropyString.bits(total, risk)
+          is_number(total) and is_number(risk) ->
+            EntropyString.bits(total, risk)
 
-        true ->
-          128
-      end
+          true ->
+            128
+        end
 
       @entropy_string_bits bits
 
@@ -86,11 +94,11 @@ defmodule EntropyString do
           charset when is_binary(charset) ->
             case validate(charset) do
               true -> charset
-              {_, reason} -> raise reason
+              {_, reason} -> raise EntropyString.Error, message: reason
             end
 
           charset ->
-            raise "Invalid predefined charset: #{charset}"
+            raise EntropyString.Error, message: "Invalid predefined charset: #{charset}"
         end
 
       @entropy_string_charset charset
@@ -381,7 +389,6 @@ defmodule EntropyString do
       EntropyString.token(:charset32)
       "7fRgrB4JtqQB8gphhf8T7bppttJQqJ3PTPFjMjGQbhgJNR9FNNHD"
   """
-  @since "1.0"
   def token(charset \\ CharSet.charset64())
 
   def token(charset) when is_atom(charset) do
