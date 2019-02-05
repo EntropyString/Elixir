@@ -3,10 +3,10 @@
 #
 #   > mix compile
 #
-# Launching the Elixir shell from the project base directory load EntropyString and runs
+# Launching the Elixir shell from the project base directory loads EntropyString and runs
 # the examples
 #
-#   > iex
+#   > iex --dot-iex iex.exs
 #
 
 alias EntropyString.CharSet

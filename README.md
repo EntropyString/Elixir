@@ -17,14 +17,15 @@ Efficiently generate cryptographically strong random strings of specified entrop
  - [Why You Don't Need UUIDs](#UUID)
  - [Take Away](#TakeAway)
 
-### Installation
+### <a name="Installation"></a>Installation
 
 Add `entropy_string` to `mix.exs` dependencies:
 
   ```elixir
-  def deps do
-    [ {:entropy_string, "~> 1.3"} ]
-  end
+  def deps,
+    do: [ 
+      {:entropy_string, "~> 1.3"}
+    ]
   ```
 
 Update dependencies

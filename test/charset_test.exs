@@ -16,8 +16,8 @@ defmodule EntropyString.CharSet.Test do
   @bits_per_byte 8
 
   test "module charset" do
-    defmodule(HexChars, do: use(EntropyString, charset: CharSet.charset16))
-    assert CharSet.charset16() === HexChars.charset
+    defmodule(HexChars, do: use(EntropyString, charset: CharSet.charset16()))
+    assert CharSet.charset16() === HexChars.charset()
   end
 
   test "bits per char" do
