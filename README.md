@@ -217,7 +217,7 @@ Not only is this statement more specific, there is no mention of string length. 
 
 How do you address this need using a library designed to generate strings of specified length?  Well, you don't, because that library was designed to answer the originally stated need, not the real need we've uncovered. We need a library that deals with probabilistic uniqueness of a total number of some strings. And that's exactly what `EntropyString` does.
 
-Let's use `EntropyString` to help this developer generate 5 hexadecimal IDs from a pool of a potentail 10,000 IDs with a 1 in a milllion chance of a repeat:
+Let's use `EntropyString` to help this developer generate 5 hexadecimal IDs from a pool of a potential 10,000 IDs with a 1 in a million chance of a repeat:
 
   ```elixir
   iex> defmodule(Id, do: use(EntropyString, total: 10_000, risk: 1.0e6, charset: charset16))
@@ -227,7 +227,7 @@ Let's use `EntropyString` to help this developer generate 5 hexadecimal IDs from
   ["85e442fa0e83", "a74dc126af1e", "368cd13b1f6e", "81bf94e1278d", "fe7dec099ac9"]
   ```
 
-Examining the above code, the `total` and `risk` values determine the amount of entropy needed, which is about 45.5 bits, and a `charset` of `charset16` specifies the use of hexidecimal characters. Then Ids are then generated using `Id.random/0`.
+Examining the above code, the `total` and `risk` values determine the amount of entropy needed, which is about 45.5 bits, and a `charset` of `charset16` specifies the use of hexadecimal characters. Then Ids are then generated using `Id.random/0`.
 
 Looking at the output, we can see each Id is 12 characters long. Again, the string length is a by-product of the characters (hex) used to represent the entropy (45.5 bits) we needed. And it seems the developer didn't really need 16 characters after all.
 
@@ -352,7 +352,7 @@ In the code above, `Enum.random` generates a value used to index into the hexade
 
 Compare that to the `EntropyString` scheme. For the example above, plucking 5 bits at a time requires a total of 80 bits (10 bytes) be available. Creating the same strings as above, `EntropyString` uses 80 bits of randomness per string with no wasted bits. In general, the `EntropyString` scheme can waste up to 7 bits per string, but that's the worst case scenario and that's *per string*, not *per character*!
 
-There is, however, a potentially bigger issue at play in the above code. Erlang `rand`, and therefor Elixir `Enum.random`, does not use a cryptographically strong psuedo random number generator. So the above code should not be used for session IDs or any other purpose that requires secure properties.
+There is, however, a potentially bigger issue at play in the above code. Erlang `rand`, and therefor Elixir `Enum.random`, does not use a cryptographically strong pseudo random number generator. So the above code should not be used for session IDs or any other purpose that requires secure properties.
 
 There are certainly other popular ways to create random strings, including secure ones. For example, generating secure random hex strings can be done by
 
@@ -497,7 +497,7 @@ And finally, don't say you use version 4 UUIDs because you don't **_ever_** want
     - You'll do fine with probabilistically uniqueness
   - Probabilistic uniqueness involves risk
     - Risk is specified as *"1 in __n__ chance of generating a repeat"*
-  - Explicity specify your intent
+  - Explicitly specify your intent
     - Specified entropy as the risk of repeat in a total number of strings
   - Characters used are arbitrary
   - You need `EntropyString`, not UUIDs
