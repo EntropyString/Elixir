@@ -3,23 +3,11 @@ sudo: false
 
 env:
   - ELIXIR_ASSERT_TIMEOUT=2000
-  
-matrix:
-  include:
-    - otp_release: 18.3
-      elixir: 1.4
-    - otp_release: 19.3
-      elixir: 1.4
-    - otp_release: 20.0
-      elixir: 1.4
-    - otp_release: 19.3
-      elixir: 1.5
-    - otp_release: 20.0
-      elixir: 1.5
-    - otp_release: 20.0
-      elixir: 1.6
-    - otp_release: 20.3
-      elixir: 1.6
+
+elixir:
+  - '1.8'
+otp_release:
+  - '21.2'
 
 script:
   - mix test
