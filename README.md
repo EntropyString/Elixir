@@ -4,6 +4,21 @@ Efficiently generate cryptographically strong random strings of specified entrop
 
 [![Build Status](https://travis-ci.org/EntropyString/Elixir.svg?branch=master)](https://travis-ci.org/EntropyString/Elixir) &nbsp; [![Hex Version](https://img.shields.io/hexpm/v/entropy_string.svg "Hex Version")](https://hex.pm/packages/entropy_string) &nbsp; [![License: MIT](https://img.shields.io/npm/l/express.svg)]()
 
+
+## <center>NOTICE</center>
+
+<hr/>
+
+`EntropyString` is now superseded by [Puid](https://github.com/puid/Elixir). 
+
+`Puid` is based on the same logic as `EntropyString` but is [significantly faster](https://puid.github.io/Elixir/#EntropyString) for pre-defined character sets (which has been expanded to a total of [16 sets](https://hexdocs.pm/puid/Puid.CharSet.html#module-charsets)), as well as somewhat faster for custom characters, which can now be of any character count, as well as Unicode.
+
+The `Puid` [generated API](https://puid.github.io/Elixir/#ModuleAPI) for modules has been simplified to two functions: `generate/0` and `info/0`.
+
+`EntropyString` will not be removed. Although switching to `Puid` shouldn't be difficult, contact [Paul Rogers](https://hex.pm/users/dingosky) with any questions or need of assistance.
+
+<hr/>
+
 ### <a name="TOC"></a>TOC
  - [Installation](#Installation)
  - [Usage](#Usage)

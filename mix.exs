@@ -4,7 +4,7 @@ defmodule EntropyString.Mixfile do
   def project do
     [
       app: :entropy_string,
-      version: "1.3.2",
+      version: "1.3.3",
       elixir: "~> 1.8",
       deps: deps(),
       description: description(),
@@ -20,7 +20,7 @@ defmodule EntropyString.Mixfile do
 
   defp description do
     """
-    Efficiently generate cryptographically strong random strings of specified entropy from various character sets.
+    Efficiently generate cryptographically strong random strings of specified entropy from various character sets. `EntropyString` is superseded by `Puid` (https://hex.pm/packages/puid).
     """
   end
 
