@@ -250,7 +250,6 @@ defmodule EntropyString do
       iex> round(bits)
       29
   """
-  @since "1.0"
   def bits(0, _), do: 0
   def bits(_, 0), do: 0
   def bits(total, _) when total < 0, do: NaN
@@ -287,7 +286,6 @@ defmodule EntropyString do
       "7bc250e5"
 
   """
-  @since "1.1.0"
   def small(charset \\ :charset32)
 
   def small(charset) when is_atom(charset) do
@@ -313,7 +311,6 @@ defmodule EntropyString do
       "b95d23b299eeb9bbe6"
 
   """
-  @since "1.1.0"
   def medium(charset \\ :charset32)
 
   def medium(charset) when is_atom(charset) do
@@ -339,7 +336,6 @@ defmodule EntropyString do
       EntropyString.large(:charset16)
       "f6c4d04cef266a5c3a7950f90"
   """
-  @since "1.1.0"
   def large(charset \\ :charset32)
 
   def large(charset) when is_atom(charset) do
